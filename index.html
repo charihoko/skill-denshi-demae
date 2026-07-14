@@ -3,905 +3,161 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>技能電子出面</title>
+<title>技能電子出面 V1.4 公開検証版</title>
 <style>
-:root{
-  --blue:#1f5aae;--blue2:#eaf2ff;--line:#d8e1ec;--text:#14202b;--muted:#667085;--bg:#f4f7fb;--card:#fff;
-  --danger:#c0392b;
-}
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);}
-header{position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid var(--line);padding:14px 18px 10px}
-h1{font-size:24px;margin:0 0 4px}.sub{font-size:13px;color:var(--muted)}
-.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}.tab{border:0;border-radius:18px;padding:14px 8px;font-weight:800;font-size:18px;background:#e8eef6;color:#213044}.tab.active{background:var(--blue);color:#fff}
-main{max-width:720px;margin:0 auto;padding:14px 14px 110px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0;box-shadow:0 1px 4px rgba(20,32,43,.04)}
-label{display:block;font-weight:800;margin:10px 0 7px;font-size:15px} input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:17px;background:#fff;color:var(--text)} textarea{min-height:82px;resize:vertical}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.btn{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px 10px;font-size:17px;font-weight:800;text-align:center}.btn.on{border-color:#2974ff;background:var(--blue2);color:#0f56c8}.btn.primary{background:var(--blue);color:white;border-color:var(--blue);width:100%;padding:16px;font-size:20px;margin-top:10px}
-.help{font-size:14px;color:var(--muted);line-height:1.6}.hidden{display:none!important}.readonly{opacity:.45;pointer-events:none}
-.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.kpi{border:1px solid var(--line);border-radius:14px;background:#f9fbfe;text-align:center;padding:12px 6px}.kpi .name{font-weight:800}.kpi .val{font-size:32px;font-weight:900;margin-top:4px}
-.list{display:flex;flex-direction:column;gap:10px}.item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.item strong{font-size:16px}.item small{display:block;color:var(--muted);margin-top:4px;line-height:1.4}
-.footer{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);border-top:1px solid var(--line);padding:10px 14px env(safe-area-inset-bottom);display:grid;grid-template-columns:1fr 1fr;gap:10px;z-index:20}.footer button{border:1px solid #bcd1ff;background:#eef5ff;color:#0d54b5;border-radius:14px;padding:15px 10px;font-size:18px;font-weight:900}
-.warn{background:#fff3cd;border:1px solid #ffe08a;color:#664d03;border-radius:12px;padding:10px;margin:10px 0;font-size:14px;line-height:1.5}
-.adminOnly{border-top:1px dashed var(--line);margin-top:10px;padding-top:10px}
-@media(max-width:430px){h1{font-size:22px}.tab{font-size:17px;padding:13px 6px}main{padding:10px 10px 106px}.card{border-radius:16px;padding:12px}.grid2,.grid3{gap:8px}.btn{font-size:16px;padding:13px 8px}.kpi .val{font-size:28px}}
+:root{--bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#657089;--line:#dce3ef;--main:#3157e7;--soft:#edf1ff;--danger:#b91c1c;--ok:#16703a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#2646c5,#4268ef);color:#fff;padding:14px 16px;box-shadow:0 4px 14px #0002}
+header h1{margin:0;font-size:19px}header p{margin:4px 0 0;font-size:12px}
+.wrap{max-width:720px;margin:auto;padding:12px}.notice{background:#fff7ed;border:1px solid #fdba74;border-radius:14px;padding:12px;margin-bottom:12px;color:#9a3412;font-weight:700}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.tab,.btn{min-height:48px;border-radius:12px;border:0;font:inherit;font-weight:800}
+.tab{background:#fff;border:1px solid var(--line)}.tab.active,.btn{background:var(--main);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px #0f172a0a}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wide{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}input,select,textarea{width:100%;min-height:46px;border:1px solid var(--line);border-radius:11px;padding:11px;font:inherit;background:#fff}
+textarea{min-height:72px}.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.calc div{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.calc small{display:block;color:var(--muted)}.calc b{font-size:20px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.sub{background:var(--soft);color:var(--main);border:1px solid #c9d2ff}.danger{background:#fee2e2;color:var(--danger);border:1px solid #fecaca}
+.transport-panel{display:none;margin-top:10px;padding:12px;background:#f8fafc;border:1px solid var(--line);border-radius:12px}
+.transport-panel.open{display:block}
+.transport-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.transport-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.transport-tag{border:1px solid #c9d2ff;background:#edf1ff;color:#3157e7;border-radius:999px;padding:7px 10px;font-size:13px;font-weight:700}
+.item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px}.item h3{font-size:15px;margin:0 0 7px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px}.meta div{background:#f8fafc;padding:8px;border-radius:9px}.hidden{display:none}
+.footer{font-size:12px;color:var(--muted);text-align:center;padding:12px}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
-  <h1>技能電子出面</h1>
-  <div class="sub">単体HTML版 Ver1.3 / 台帳 <span id="ledgerCount">0</span>件内蔵</div>
-  <div class="tabs">
-    <button class="tab active" data-tab="input">入力</button>
-    <button class="tab" data-tab="confirm">確認</button>
-    <button class="tab" data-tab="admin">管理</button>
-  </div>
-</header>
-<main>
-<section id="inputPanel">
-  <div class="card">
-    <label>氏名</label>
-    <input id="workerName" list="nameHistory" placeholder="氏名を入力" autocomplete="off">
-    <datalist id="nameHistory"></datalist>
-    <div class="help" id="storageHelp">保存すると次回から前回の氏名を表示します。</div>
-    <label>日付</label>
-    <input id="workDate" type="date">
-  </div>
-  <div class="card">
-    <label>勤務区分</label>
-    <div class="grid2">
-      <button class="btn on" data-kind="normal">通常</button>
-      <button class="btn" data-kind="night">夜勤務</button>
-      <button class="btn" data-kind="holiday">休日</button>
-      <button class="btn" data-kind="rain">雨休</button>
-      <button class="btn" data-kind="special">特休</button>
-      <button class="btn" data-kind="paid">有給</button>
-    </div>
-    <div class="help" style="margin-top:8px">休日・雨休・特休・有給を選んだ場合、現場名と勤務時間は入力不要になります。</div>
-  </div>
-  <div class="card" id="workFields">
-    <label>部門</label>
-    <select id="categorySelect"></select>
-    <label>現場名</label>
-    <select id="siteSelect"></select>
-    <label>勤務時間</label>
-    <div class="grid2">
-      <select id="startTime"></select>
-      <select id="endTime"></select>
-    </div>
-  </div>
-  <div class="card">
-    <label>食事・特殊・通勤</label>
-    <div class="grid3">
-      <button class="btn toggle" data-opt="meal">食数</button>
-      <button class="btn toggle" data-opt="specialA">特殊A</button>
-      <button class="btn toggle" data-opt="specialB">特殊B</button>
-      <button class="btn toggle" data-opt="commute">通勤</button>
-      <button class="btn toggle" data-opt="pickup">送迎</button>
-    </div>
-    <label>備考</label>
-    <textarea id="memo" placeholder="必要な時だけ入力"></textarea>
-  </div>
-  <div class="card">
-    <div class="kpis">
-      <div class="kpi"><div class="name">平時</div><div class="val" id="kRegular">7.3</div></div>
-      <div class="kpi"><div class="name">残業</div><div class="val" id="kOvertime">0.0</div></div>
-      <div class="kpi"><div class="name">深夜</div><div class="val" id="kNight">0.0</div></div>
-    </div>
-    <div class="help" style="margin-top:10px">給与計算用の内訳は、この画面には表示しません。</div>
-    <button class="btn primary" id="saveBtn">保存する</button>
-  </div>
-</section>
-<section id="confirmPanel" class="hidden">
-  <div class="card"><h2>入力履歴</h2><div class="list" id="historyList"></div></div>
-</section>
-<section id="adminPanel" class="hidden">
-  <div class="card">
-    <h2>管理者確認</h2>
-    <div class="warn">この画面だけ給与計算用の内部内訳を表示します。技能者入力画面には表示しません。</div>
-    <div class="grid2">
-      <button class="btn" id="csvBtn">CSV出力</button>
-      <button class="btn" id="clearBtn">全削除（試験用）</button>
-    </div>
-    <div class="list" id="adminList" style="margin-top:10px"></div>
-  </div>
-</section>
-</main>
-<div class="footer">
-  <button id="reloadBtn">台帳再読込</button>
-  <button id="showInputBtn">入力を見る</button>
+<header><h1>技能電子出面 V1.4</h1><p>公開検証版／すべてダミーデータ</p></header>
+<main class="wrap">
+<div class="notice">このページは動作確認専用です。実名・実際の工事名・会社情報は登録しないでください。</div>
+<div class="tabs"><button class="tab active" data-tab="input">入力</button><button class="tab" data-tab="list">入力を見る</button></div>
+
+<section id="input">
+<div class="card">
+<div class="grid">
+<div><label>日付</label><input id="date" type="date"></div>
+<div><label>氏名</label><select id="name"><option>テスト太郎</option><option>テスト花子</option><option>技能者A</option></select></div>
+<div><label>部門</label><select id="dept"><option>舗装部</option><option>土木部</option><option>建築部</option></select></div>
+<div><label>現場</label><select id="site"><option>テスト現場A</option><option>テスト現場B</option><option>社内作業</option><option value="">現場なし</option></select></div>
+<div><label>出勤</label><input id="start" type="time" value="08:00"></div>
+<div><label>終業</label><input id="end" type="time" value="17:00"></div>
+<div><label>通勤（数値）</label><input id="commute" type="number" min="0" step="0.5" value="0"></div>
+<div><label>区分</label><select id="kind"><option>通常</option><option>夜勤</option><option>有給</option><option>雨休</option></select></div>
+<div class="wide">
+<label>送迎</label>
+<button type="button" class="btn sub" id="transportBtn" style="width:100%">送迎を入力</button>
+<div class="transport-panel" id="transportPanel">
+<div class="transport-row">
+<input id="transportName" list="transportHistory" placeholder="送迎した人の名前を入力">
+<button type="button" class="btn" id="transportAdd" style="min-width:86px">追加</button>
 </div>
+<datalist id="transportHistory"></datalist>
+<div class="transport-tags" id="transportTags"></div>
+<p style="font-size:12px;color:var(--muted);margin:8px 0 0">一度追加した名前は、この端末に記憶され、次回から候補に表示されます。</p>
+</div>
+</div>
+<div class="wide"><label>備考（現場なしの場合は必須）</label><textarea id="note" placeholder="例：健康診断、講習、安全教育"></textarea></div>
+<div class="wide calc"><div><small>平時</small><b id="normal">7.3</b></div><div><small>残業</small><b id="ot">0.0</b></div><div><small>深夜</small><b id="night">0.0</b></div></div>
+</div>
+<div class="actions"><button class="btn" id="save">保存して確認</button><button class="btn sub" id="clear">入力クリア</button></div>
+</div>
+</section>
+
+<section id="list" class="hidden">
+<div class="card">
+<b>この端末のテスト履歴</b>
+<p style="font-size:12px;color:var(--muted)">保存先はこのブラウザ内だけです。GitHubやSharePointへ送信されません。</p>
+<button class="btn danger" id="wipe" style="width:100%">テスト履歴を全削除</button>
+</div>
+<div id="items"></div>
+</section>
+<div class="footer">GitHub Pages公開用・ダミーデータ限定</div>
+</main>
 <script>
-const LEDGER = [
-  {
-    "code": "121001250",
-    "name": "令和7-8年度国道33号名野川橋耐震補強外工 事",
-    "client": "土佐国道事務所",
-    "start": "2025.10.24",
-    "end": "2027.03.31",
-    "manager": "柴岡 裕幸",
-    "category": "土木"
-  },
-  {
-    "code": "121003250",
-    "name": "令和7ー8年度 仁淀川用石地区河道掘削(そ の1）工事",
-    "client": "高知河川国道事務所",
-    "start": "2026.04.01",
-    "end": "2027.03.31",
-    "manager": "山上 博司",
-    "category": "土木"
-  },
-  {
-    "code": "121004250",
-    "name": "令和7ー8年度 越知道路越知丁改良（その2 ）工事",
-    "client": "土佐国道事務所",
-    "start": "2026.04.01",
-    "end": "2027.03.31",
-    "manager": "梅原 稜河",
-    "category": "土木"
-  },
-  {
-    "code": "121005250",
-    "name": "令和８年度排水ﾎﾟﾝﾌﾟ車等管理運営業務（そ の３）",
-    "client": "高知河川国道事務所",
-    "start": "2026.04.01",
-    "end": "2027.03.31",
-    "manager": "山中 智貴",
-    "category": "土木"
-  },
-  {
-    "code": "111003250",
-    "name": "令和8年度 安芸道路安芸東改良工事",
-    "client": "土佐国道事務所",
-    "start": "2026.07.02",
-    "end": "2027.03.31",
-    "manager": "森田 浩之",
-    "category": "土木"
-  },
-  {
-    "code": "111002250",
-    "name": "令和7－8年度 物部川下ノ村地区河道掘削外 工事",
-    "client": "高知河川国道事務所",
-    "start": "2026.04.01",
-    "end": "2027.03.26",
-    "manager": "伊藤 吟",
-    "category": "土木"
-  },
-  {
-    "code": "134001250",
-    "name": "県道中村宿毛線 防災・安全交付金工事",
-    "client": "高知県土木部土木政策",
-    "start": "2025.05.21",
-    "end": "2027.03.17",
-    "manager": "小森 和明",
-    "category": "土木"
-  },
-  {
-    "code": "116001250",
-    "name": "国道493号（北川道路）道路改築工事（道改 国第91－8号）",
-    "client": "高知県土木部土木政策",
-    "start": "2026.03.26",
-    "end": "2027.03.17",
-    "manager": "池 英生",
-    "category": "土木"
-  },
-  {
-    "code": "121006250",
-    "name": "令和8年度 仁淀川用石地区河道掘削工事",
-    "client": "高知河川国道事務所",
-    "start": "2026.07.16",
-    "end": "2027.02.24",
-    "manager": "",
-    "category": "土木"
-  },
-  {
-    "code": "121002250",
-    "name": "令和7-8年度吉野川水系ほり谷堰堤外工事",
-    "client": "四国山地砂防事務所",
-    "start": "2025.11.13",
-    "end": "2027.01.29",
-    "manager": "杉本 貴明",
-    "category": "土木"
-  },
-  {
-    "code": "120004251",
-    "name": "広域 第52－2号 柳瀬川広域河川改修工事 （準備工）",
-    "client": "（株）高橋組",
-    "start": "2026.06.03",
-    "end": "2027.01.14",
-    "manager": "曽我部 誠司",
-    "category": "土木"
-  },
-  {
-    "code": "128001250",
-    "name": "旭2号汚水幹線外管渠築造工事（R7－1）",
-    "client": "高知市上下水道局",
-    "start": "2026.02.27",
-    "end": "2026.11.23",
-    "manager": "福井 幸三",
-    "category": "土木"
-  },
-  {
-    "code": "120004250",
-    "name": "広域 第52ｰ1 柳瀬川広域河川改修工事（準備工）",
-    "client": "（株）高橋組",
-    "start": "2026.06.03",
-    "end": "2026.11.21",
-    "manager": "曽我部 誠司",
-    "category": "土木"
-  },
-  {
-    "code": "120000570",
-    "name": "57期 ICT共通原価",
-    "client": "",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "木幡 翔",
-    "category": "土木"
-  },
-  {
-    "code": "120002259",
-    "name": "早明浦ダム再生事業増設洪水吐き工事 放流管基礎及び減勢工他工事7",
-    "client": "岸本建設（株）",
-    "start": "2026.05.01",
-    "end": "2026.07.31",
-    "manager": "",
-    "category": "土木"
-  },
-  {
-    "code": "111006240",
-    "name": "令和6－7年度 南国安芸道路和食西地区 改良外Ｐ4工事",
-    "client": "土佐国道事務所",
-    "start": "2026.04.01",
-    "end": "2026.06.30",
-    "manager": "田中 康満",
-    "category": "土木"
-  },
-  {
-    "code": "111001250",
-    "name": "令和7年度国道32号大豊ﾄﾝﾈﾙ補修工事",
-    "client": "土佐国道事務所",
-    "start": "2025.10.10",
-    "end": "2026.06.30",
-    "manager": "藤村 洋人",
-    "category": "土木"
-  },
-  {
-    "code": "120002258",
-    "name": "早明浦ダム再生事業増設洪水吐き工事 放流管基礎及び減勢工他工事6",
-    "client": "岸本建設（株）",
-    "start": "2026.04.01",
-    "end": "2026.06.30",
-    "manager": "",
-    "category": "土木"
-  },
-  {
-    "code": "120002257",
-    "name": "早明浦ダム再生事業増設洪水吐き工事 放流管基礎及び減勢工他工事５",
-    "client": "岸本建設（株）",
-    "start": "2026.03.01",
-    "end": "2026.05.31",
-    "manager": "",
-    "category": "土木"
-  },
-  {
-    "code": "240001540",
-    "name": "日高村営改良住宅建替工事",
-    "client": "株式会社ひだかコミュニティー住宅",
-    "start": "2025.07.01",
-    "end": "2027.04.30",
-    "manager": "",
-    "category": "建築"
-  },
-  {
-    "code": "240008254",
-    "name": "あじさい園本館・ミニ体育館屋根塗装工事",
-    "client": "あじさい園",
-    "start": "2026.09.28",
-    "end": "2026.12.26",
-    "manager": "",
-    "category": "建築"
-  },
-  {
-    "code": "240008255",
-    "name": "第二あじさい園屋根塗装工事",
-    "client": "（社法）高知小鳩会",
-    "start": "2026.11.01",
-    "end": "2026.12.26",
-    "manager": "",
-    "category": "建築"
-  },
-  {
-    "code": "240010250",
-    "name": "四国銀行本店建替えに伴う南館建物解体工事",
-    "client": "四国銀行 本店",
-    "start": "2026.04.01",
-    "end": "2026.07.31",
-    "manager": "堀尾 康広",
-    "category": "建築"
-  },
-  {
-    "code": "240027250",
-    "name": "徳蔵土佐打ち刃物ギャラリー新装工事(設計 業務)",
-    "client": "グレイジア株式会社",
-    "start": "2026.02.20",
-    "end": "2026.07.30",
-    "manager": "安並 忠拡",
-    "category": "建築"
-  },
-  {
-    "code": "248001250",
-    "name": "令和8年度 中土佐町立久礼小学校建具硝子修繕",
-    "client": "中土佐町",
-    "start": "2026.05.16",
-    "end": "2026.07.04",
-    "manager": "柳 裕志",
-    "category": "建築"
-  },
-  {
-    "code": "240029250",
-    "name": "バリューノア店正面脱落部外壁修復工事",
-    "client": "㈱土佐山田ｼｮｯﾋﾟﾝｸﾞｾﾝ",
-    "start": "2026.06.30",
-    "end": "2026.07.01",
-    "manager": "堀尾 康広",
-    "category": "建築"
-  },
-  {
-    "code": "240034240",
-    "name": "株式会社ヤマサ社屋・倉庫移転新築工事",
-    "client": "（株）ヤマサ",
-    "start": "2025.07.01",
-    "end": "2026.06.30",
-    "manager": "柳 裕志",
-    "category": "建築"
-  },
-  {
-    "code": "240024250",
-    "name": "高知学芸進学アカデミー 玄関前庇修繕工事",
-    "client": "高知学芸中学高等学校",
-    "start": "2026.04.13",
-    "end": "2026.06.30",
-    "manager": "山本 正和",
-    "category": "建築"
-  },
-  {
-    "code": "240023250",
-    "name": "弘間様所有借家修繕工事(2026年)",
-    "client": "弘間 宏二",
-    "start": "2026.04.03",
-    "end": "2026.06.29",
-    "manager": "山本 正和",
-    "category": "建築"
-  },
-  {
-    "code": "2480001251",
-    "name": "令和８年度 中土佐町立久礼小学校建具ガラスフィルム張り修繕",
-    "client": "中土佐町",
-    "start": "2026.06.06",
-    "end": "2026.06.06",
-    "manager": "柳 裕志",
-    "category": "建築"
-  },
-  {
-    "code": "2400262560",
-    "name": "モデルショップヨシオカ 住居部屋根防水塗装塗替え工事",
-    "client": "(有)ヨシオカ",
-    "start": "2026.05.07",
-    "end": "2026.06.03",
-    "manager": "堀尾 康広",
-    "category": "建築"
-  },
-  {
-    "code": "2400262561",
-    "name": "モデルショップヨシオカ 屋根軒先板金廻り改修工事",
-    "client": "(有)ヨシオカ",
-    "start": "2026.04.30",
-    "end": "2026.06.03",
-    "manager": "堀尾 康広",
-    "category": "建築"
-  },
-  {
-    "code": "240013253",
-    "name": "株式会社コウチケイキョウ 受付カウンター南側ロールスクリーン設置工事",
-    "client": "（株）コウチケイキョ",
-    "start": "2026.05.21",
-    "end": "2026.05.21",
-    "manager": "山本 正和",
-    "category": "建築"
-  },
-  {
-    "code": "240026250",
-    "name": "株式会社 金剛 ３階出窓コーナー廻り修繕 工事",
-    "client": "（株）金剛",
-    "start": "2026.05.13",
-    "end": "2026.05.20",
-    "manager": "山本 正和",
-    "category": "建築"
-  },
-  {
-    "code": "240017251",
-    "name": "愛媛銀行山田支店サッシ廻り漏水対策工事①",
-    "client": "（株）愛媛銀行",
-    "start": "2026.05.14",
-    "end": "2026.05.14",
-    "manager": "堀尾 康広",
-    "category": "建築"
-  },
-  {
-    "code": "240030240",
-    "name": "五台山展望台施設改築工事",
-    "client": "（株）みんぷろ",
-    "start": "2025.04.20",
-    "end": "",
-    "manager": "岩戸 竜平",
-    "category": "建築"
-  },
-  {
-    "code": "328018250",
-    "name": "R8年度 梼原町内国道県道維持補修業務",
-    "client": "梼原町",
-    "start": "2026.04.01",
-    "end": "2027.03.31",
-    "manager": "竹倉 宏満",
-    "category": "舗装"
-  },
-  {
-    "code": "334002250",
-    "name": "道交国防安（改築）（債）第602-007-5号 国道441号防災・安全交付金工事",
-    "client": "高知県土木部土木政策",
-    "start": "2025.12.15",
-    "end": "2027.03.17",
-    "manager": "山下 友一",
-    "category": "舗装"
-  },
-  {
-    "code": "320010250",
-    "name": "旧高知南高校グラウンド整備工事",
-    "client": "株式会社 高知犬",
-    "start": "2025.10.01",
-    "end": "2026.12.31",
-    "manager": "中城 克典",
-    "category": "舗装"
-  },
-  {
-    "code": "320013250",
-    "name": "令和7-8年度 安芸道路川北改良工事",
-    "client": "入交建設（株）",
-    "start": "2026.05.11",
-    "end": "2026.10.30",
-    "manager": "和田 敏彦",
-    "category": "舗装"
-  },
-  {
-    "code": "320004250",
-    "name": "日高村営改良住宅建替事業（舗装工事）",
-    "client": "和・ミタニ建設工業・三和共同事業体",
-    "start": "2026.02.02",
-    "end": "2026.10.30",
-    "manager": "岡田 安勝",
-    "category": "舗装"
-  },
-  {
-    "code": "328020250",
-    "name": "8い吾住工第2号令和8年度デイサービスセン ターすこやか駐車場舗装工事",
-    "client": "いの町",
-    "start": "2026.06.17",
-    "end": "2026.10.09",
-    "manager": "栗林 秀平",
-    "category": "舗装"
-  },
-  {
-    "code": "320014250",
-    "name": "高知ソーラー発電所 1号池・3号池側溝清掃",
-    "client": "高知ソーラー合同会社",
-    "start": "2026.05.22",
-    "end": "2026.09.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "3200014251",
-    "name": "高知ソーラー発電所 2026年度上期除草及び防草シート敷設業務",
-    "client": "高知ソーラー合同会社",
-    "start": "2025.05.22",
-    "end": "2026.09.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328022250",
-    "name": "8い総工第1号 北山高台緊急避難場所舗装工事",
-    "client": "いの町",
-    "start": "2026.06.27",
-    "end": "2026.09.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "324003250",
-    "name": "公適管（ゼロ債）第505-102-1号国道195号公共施設等適正管理推進工事",
-    "client": "高知土木事務所",
-    "start": "2026.04.01",
-    "end": "2026.08.28",
-    "manager": "中越 勝美",
-    "category": "舗装"
-  },
-  {
-    "code": "314004250",
-    "name": "道交対第603-0222-1号県道龍河洞公園線道路交通安全対策工事",
-    "client": "中央東土木事務所",
-    "start": "2026.03.17",
-    "end": "2026.08.28",
-    "manager": "和田 敏彦",
-    "category": "舗装"
-  },
-  {
-    "code": "324001250",
-    "name": "道交国防安（修繕）第9117-003-1号国道194 号防災・安全交付金工事",
-    "client": "中央西土木",
-    "start": "2026.04.01",
-    "end": "2026.08.23",
-    "manager": "巳嵜 恭哉",
-    "category": "舗装"
-  },
-  {
-    "code": "324002250",
-    "name": "道交国防安（修繕）第117-003-2号国道194号防災・安全交付金工事",
-    "client": "中央西土木",
-    "start": "2026.04.01",
-    "end": "2026.08.10",
-    "manager": "大石 明日輝",
-    "category": "舗装"
-  },
-  {
-    "code": "311001250",
-    "name": "令和7-8年度南国管内舗装修繕工事",
-    "client": "土佐国道事務所",
-    "start": "2025.12.05",
-    "end": "2026.07.31",
-    "manager": "笹岡 誠司",
-    "category": "舗装"
-  },
-  {
-    "code": "328021250",
-    "name": "8吾建工第10号令和8年度林道程野～黒丸線舗装工事",
-    "client": "いの町",
-    "start": "2026.05.11",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328010250",
-    "name": "7道工第8号令和7年度町道十田線舗装工事",
-    "client": "いの町",
-    "start": "2026.02.03",
-    "end": "2026.06.30",
-    "manager": "栗林 秀平",
-    "category": "舗装"
-  },
-  {
-    "code": "328019250",
-    "name": "令和8年度町道中沢塔ノ向線舗装工事(外1路 線)",
-    "client": "いの町",
-    "start": "2026.05.14",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328013250",
-    "name": "8吾建工第2号令和8年度林道中峰線舗装工事",
-    "client": "いの町",
-    "start": "2026.04.09",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328009250",
-    "name": "7吾建工第54号令和7年度林道東谷～大森線舗装工事",
-    "client": "いの町",
-    "start": "2025.12.26",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328017250",
-    "name": "8吾建工第3号令和8年度農道樫山線舗装工事",
-    "client": "いの町",
-    "start": "2026.04.09",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328014250",
-    "name": "8吾建工第4号令和8年度町道大野線舗装工事",
-    "client": "いの町",
-    "start": "2026.04.09",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "328016250",
-    "name": "8吾建工第5号令和8年度町道津賀ノ谷線舗装 工事",
-    "client": "いの町",
-    "start": "2026.04.09",
-    "end": "2026.06.30",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "320015250",
-    "name": "樹木伐採工事",
-    "client": "荒倉工業会",
-    "start": "2026.06.13",
-    "end": "2026.06.15",
-    "manager": "中城 克典",
-    "category": "舗装"
-  },
-  {
-    "code": "330005241",
-    "name": "県道韮ヶ峠文丸線 坪野田地区舗装修繕工事(梼原町維持修繕)",
-    "client": "（株）四万川総合建設",
-    "start": "2026.05.20",
-    "end": "2026.05.30",
-    "manager": "西岡 誠一",
-    "category": "舗装"
-  },
-  {
-    "code": "328008250",
-    "name": "孕東町～横浜送水管布設替に伴う舗装工事（その２）",
-    "client": "高知市上下水道局",
-    "start": "2025.12.11",
-    "end": "2026.05.19",
-    "manager": "土居 孝典",
-    "category": "舗装"
-  },
-  {
-    "code": "328015250",
-    "name": "8い環工第1号令和8年度相生浄化施設進入路 修繕工事",
-    "client": "いの町",
-    "start": "2026.04.13",
-    "end": "2026.05.08",
-    "manager": "山中 浩樹",
-    "category": "舗装"
-  },
-  {
-    "code": "90003200",
-    "name": "舗装南国／共通原価",
-    "client": "ミタニ建設工業（株）",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "岡崎 美津恵",
-    "category": "共通"
-  },
-  {
-    "code": "90003100",
-    "name": "舗装室戸／共通原価",
-    "client": "ミタニ建設工業（株）",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "岡崎 美津恵",
-    "category": "共通"
-  },
-  {
-    "code": "90003500",
-    "name": "舗装高幡／共通原価",
-    "client": "ミタニ建設工業（株）",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "笹岡 誠司",
-    "category": "共通"
-  },
-  {
-    "code": "90003400",
-    "name": "舗装吾北／共通原価",
-    "client": "ミタニ建設工業（株）",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "山中 浩樹",
-    "category": "共通"
-  },
-  {
-    "code": "90003300",
-    "name": "舗装中央／共通原価",
-    "client": "ミタニ建設工業（株）",
-    "start": "2025.10.01",
-    "end": "2026.09.30",
-    "manager": "岡崎 美津恵",
-    "category": "共通"
-  },
-  {
-    "code": "42001000",
-    "name": "GFカート進入路維持57",
-    "client": "かもべ開発（株）",
-    "start": "2025.09.01",
-    "end": "2026.08.31",
-    "manager": "小笠原 洋輔",
-    "category": "その他"
-  }
-];
+const KEY='skill_denshi_demae_public_demo_v14';
+const TRANSPORT_KEY='skill_denshi_demae_transport_names_v14';
+const $=id=>document.getElementById(id);
+let records=JSON.parse(localStorage.getItem(KEY)||'[]');
+let transportHistory=JSON.parse(localStorage.getItem(TRANSPORT_KEY)||'[]');
+let selectedTransport=[];
+function today(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+$('date').value=today();
+function minutes(t){const [h,m]=t.split(':').map(Number);return h*60+m}
+function duration(s,e){let a=minutes(s),b=minutes(e);if(b<=a)b+=1440;return b-a}
+function overlap(a1,a2,b1,b2){return Math.max(0,Math.min(a2,b2)-Math.max(a1,b1))}
+function display(min){const h=Math.floor(min/60),m=min%60;return `${h}.${m===30?'3':'0'}`}
+function saveTransportHistory(){
+ localStorage.setItem(TRANSPORT_KEY,JSON.stringify(transportHistory));
+ renderTransportHistory();
+}
+function renderTransportHistory(){
+ $('transportHistory').innerHTML='';
+ transportHistory.forEach(name=>{
+   const o=document.createElement('option');
+   o.value=name;
+   $('transportHistory').appendChild(o);
+ });
+}
+function renderSelectedTransport(){
+ $('transportTags').innerHTML='';
+ selectedTransport.forEach((name,index)=>{
+   const b=document.createElement('button');
+   b.type='button';
+   b.className='transport-tag';
+   b.textContent=name+' ×';
+   b.onclick=()=>{selectedTransport.splice(index,1);renderSelectedTransport();};
+   $('transportTags').appendChild(b);
+ });
+ $('transportBtn').textContent=selectedTransport.length ? `送迎：${selectedTransport.join('、')}` : '送迎を入力';
+}
+$('transportBtn').onclick=()=>{
+ $('transportPanel').classList.toggle('open');
+ if($('transportPanel').classList.contains('open')) $('transportName').focus();
+};
+$('transportAdd').onclick=()=>{
+ const name=$('transportName').value.trim();
+ if(!name)return;
+ if(!transportHistory.includes(name)){
+   transportHistory.unshift(name);
+   saveTransportHistory();
+ }
+ if(!selectedTransport.includes(name)) selectedTransport.push(name);
+ $('transportName').value='';
+ renderSelectedTransport();
+};
+$('transportName').addEventListener('keydown',e=>{
+ if(e.key==='Enter'){e.preventDefault();$('transportAdd').click();}
+});
 
-function safeStorage(){
-  try{
-    const k="__test__"; window.localStorage.setItem(k,"1"); window.localStorage.removeItem(k);
-    return window.localStorage;
-  }catch(e){ return null; }
+function calc(){
+ const s=$('start').value,e=$('end').value; let a=minutes(s),b=minutes(e);if(b<=a)b+=1440;
+ const total=b-a, base=Math.min(450,Math.max(0,total-90)), overtime=Math.max(0,total-540);
+ const nightMinutes=overlap(a,b,1320,1740)+overlap(a,b,2760,3180);
+ $('normal').textContent=display(base);
+ $('ot').textContent=display(overtime);
+ $('night').textContent=display(Math.max(0,nightMinutes-Math.min(nightMinutes,450)));
+ return {normal:$('normal').textContent,ot:$('ot').textContent,night:$('night').textContent};
 }
-const store = safeStorage();
-const memory = { history: [], names: [] };
-const $ = (id)=>document.getElementById(id);
-const state = { kind:"normal", opts:{meal:false,specialA:false,specialB:false,commute:false,pickup:false} };
-
-function getStore(key, fallback){
-  if(!store) return fallback;
-  try{ return JSON.parse(store.getItem(key)) ?? fallback; }catch(e){ return fallback; }
-}
-function setStore(key, val){
-  if(!store) return false;
-  try{ store.setItem(key, JSON.stringify(val)); return true; }catch(e){ return false; }
-}
-function toDateInput(d=new Date()){
-  const z=n=>String(n).padStart(2,"0");
-  return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
-}
-function makeTimes(){
-  const out=[];
-  for(let h=0; h<24; h++){
-    for(const m of [0,30]){
-      out.push(`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`);
-    }
-  }
-  return out;
-}
-function fillTimes(){
-  const opts=makeTimes().map(t=>`<option value="${t}">${t}</option>`).join("");
-  $("startTime").innerHTML=opts; $("endTime").innerHTML=opts;
-}
-function hmToMin(s){ const [h,m]=s.split(":").map(Number); return h*60+m; }
-function overlap(a1,a2,b1,b2){ return Math.max(0, Math.min(a2,b2)-Math.max(a1,b1)); }
-function fmtCompany(minutes){
-  minutes=Math.max(0, Math.round(minutes/30)*30);
-  const h=Math.floor(minutes/60), m=minutes%60;
-  return `${h}.${m>=30?3:0}`;
-}
-function calcWork(start, end, kind){
-  if(["holiday","rain","special","paid"].includes(kind)){
-    return {regular:"0.0", overtime:"0.0", night:"0.0", overtime1:"0.0", overtime025:"0.0", night025:"0.0"};
-  }
-  let s=hmToMin(start), e=hmToMin(end); if(e<=s) e+=1440;
-  const work=e-s;
-  const base=9*60, rest=90, regular=Math.max(0, Math.min(work, base)-rest);
-  const overtime=Math.max(0, work-base);
-  const night1s=22*60, night1e=29*60; // 22:00-翌5:00
-  const totalNight=overlap(s,e,night1s,night1e);
-  const regularEnd=s+base;
-  const nightOutside=overlap(Math.max(s,regularEnd),e,night1s,night1e);
-  return {
-    regular: fmtCompany(regular),
-    overtime: fmtCompany(overtime),
-    night: fmtCompany(nightOutside),
-    overtime1: fmtCompany(overtime),
-    overtime025: fmtCompany(totalNight),
-    night025: fmtCompany(nightOutside)
-  };
-}
-function categories(){
-  return [...new Set(LEDGER.map(x=>x.category).filter(Boolean))];
-}
-function loadLedger(){
-  $("ledgerCount").textContent = LEDGER.length;
-  const cats=categories();
-  $("categorySelect").innerHTML = cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-  const lastCat=getStore("lastCat", cats[0] || "");
-  if(cats.includes(lastCat)) $("categorySelect").value=lastCat;
-  fillSites();
-}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
-function fillSites(){
-  const cat=$("categorySelect").value;
-  const sites=LEDGER.filter(x=>x.category===cat);
-  $("siteSelect").innerHTML = `<option value="">選択してください</option>` + sites.map(x=>`<option value="${escapeHtml(x.code)}">${escapeHtml(x.name)}</option>`).join("");
-  const lastSite=getStore("lastSite","");
-  if([...$("siteSelect").options].some(o=>o.value===lastSite)) $("siteSelect").value=lastSite;
-}
-function updateKind(kind){
-  state.kind=kind;
-  document.querySelectorAll("[data-kind]").forEach(b=>b.classList.toggle("on", b.dataset.kind===kind));
-  const off=["holiday","rain","special","paid"].includes(kind);
-  $("workFields").classList.toggle("readonly", off);
-  if(kind==="night"){ $("startTime").value="20:00"; $("endTime").value="05:00"; }
-  if(kind==="normal"){ $("startTime").value="08:00"; $("endTime").value="17:00"; }
-  updateCalc();
-}
-function updateCalc(){
-  const r=calcWork($("startTime").value,$("endTime").value,state.kind);
-  $("kRegular").textContent=r.regular; $("kOvertime").textContent=r.overtime; $("kNight").textContent=r.night;
-}
-function refreshNames(){
-  const names = store ? getStore("nameHistory",[]) : memory.names;
-  $("nameHistory").innerHTML=names.map(n=>`<option value="${escapeHtml(n)}"></option>`).join("");
-  const last=store ? getStore("lastName","") : "";
-  if(last && !$("workerName").value) $("workerName").value=last;
-  if(!store) $("storageHelp").textContent="SharePointプレビュー等では前回氏名の保存が無効になる場合があります。";
-}
-function currentRecord(){
-  const cat=$("categorySelect").value, opt=$("siteSelect").selectedOptions[0];
-  const site=LEDGER.find(x=>x.code===$("siteSelect").value);
-  const c=calcWork($("startTime").value,$("endTime").value,state.kind);
-  return {
-    date:$("workDate").value, name:$("workerName").value.trim(), kind:state.kind,
-    category:cat, siteCode:site?.code||"", siteName:site?.name||"",
-    start:$("startTime").value, end:$("endTime").value,
-    meal:state.opts.meal, specialA:state.opts.specialA, specialB:state.opts.specialB, commute:state.opts.commute, pickup:state.opts.pickup,
-    memo:$("memo").value.trim(), calc:c, savedAt:new Date().toLocaleString("ja-JP")
-  };
-}
-function kindLabel(k){return ({normal:"通常",night:"夜勤務",holiday:"休日",rain:"雨休",special:"特休",paid:"有給"}[k]||k);}
-function optLabels(r){return [["meal","食数"],["specialA","特殊A"],["specialB","特殊B"],["commute","通勤"],["pickup","送迎"]].filter(([k])=>r[k]).map(([,v])=>v).join("、") || "なし";}
-function saveRecord(){
-  const r=currentRecord();
-  if(!r.name){ alert("氏名を入力してください。"); return; }
-  if(!["holiday","rain","special","paid"].includes(r.kind) && !r.siteCode){ alert("現場名を選択してください。"); return; }
-  const hist = store ? getStore("history",[]) : memory.history;
-  hist.unshift(r); hist.splice(100);
-  if(store){ setStore("history",hist); setStore("lastName",r.name); setStore("lastCat",r.category); setStore("lastSite",r.siteCode); }
-  else { memory.history=hist; }
-  const names = store ? getStore("nameHistory",[]) : memory.names;
-  const newNames=[r.name,...names.filter(n=>n!==r.name)].slice(0,30);
-  if(store) setStore("nameHistory",newNames); else memory.names=newNames;
-  refreshNames(); renderLists(); alert("保存しました。");
-}
-function renderLists(){
-  const hist=store ? getStore("history",[]) : memory.history;
-  $("historyList").innerHTML = hist.length ? hist.map(itemHtml).join("") : `<div class="help">まだ入力履歴はありません。</div>`;
-  $("adminList").innerHTML = hist.length ? hist.map(adminHtml).join("") : `<div class="help">まだ入力履歴はありません。</div>`;
-}
-function itemHtml(r){
-  return `<div class="item"><strong>${escapeHtml(r.date)}　${escapeHtml(r.name)}　${kindLabel(r.kind)}</strong>
-  <small>${escapeHtml(r.category)} / ${escapeHtml(r.siteName || "現場入力不要")}<br>${escapeHtml(r.start)}～${escapeHtml(r.end)}　平時 ${r.calc.regular}　残業 ${r.calc.overtime}　深夜 ${r.calc.night}<br>食事・特殊・通勤：${escapeHtml(optLabels(r))}${r.memo?`<br>備考：${escapeHtml(r.memo)}`:""}</small></div>`;
-}
-function adminHtml(r){
-  return `<div class="item"><strong>${escapeHtml(r.date)}　${escapeHtml(r.name)}　${kindLabel(r.kind)}</strong>
-  <small>${escapeHtml(r.category)} / ${escapeHtml(r.siteName || "現場入力不要")}<br>${escapeHtml(r.start)}～${escapeHtml(r.end)}
-  <br>平時 ${r.calc.regular} / 残業1.0 ${r.calc.overtime1} / 残業0.25 ${r.calc.overtime025} / 深夜0.25 ${r.calc.night025}
-  <br>食事・特殊・通勤：${escapeHtml(optLabels(r))}${r.memo?`<br>備考：${escapeHtml(r.memo)}`:""}<br>保存：${escapeHtml(r.savedAt)}</small></div>`;
-}
-function showTab(tab){
-  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
-  $("inputPanel").classList.toggle("hidden",tab!=="input");
-  $("confirmPanel").classList.toggle("hidden",tab!=="confirm");
-  $("adminPanel").classList.toggle("hidden",tab!=="admin");
-  renderLists();
-}
-function csvOut(){
-  const hist=store ? getStore("history",[]) : memory.history;
-  if(!hist.length){ alert("出力する履歴がありません。"); return; }
-  const headers=["日付","氏名","勤務区分","部門","工事コード","現場名","出勤","終業","平時","残業1.0","残業0.25","深夜0.25","食数","特殊A","特殊B","通勤","送迎","備考","保存日時"];
-  const rows=hist.map(r=>[r.date,r.name,kindLabel(r.kind),r.category,r.siteCode,r.siteName,r.start,r.end,r.calc.regular,r.calc.overtime1,r.calc.overtime025,r.calc.night025,r.meal,r.specialA,r.specialB,r.commute,r.pickup,r.memo,r.savedAt]);
-  const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");
-  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="電子出面.csv"; a.click(); URL.revokeObjectURL(a.href);
-}
-function init(){
-  fillTimes(); $("workDate").value=toDateInput(); loadLedger(); refreshNames();
-  $("startTime").value="08:00"; $("endTime").value="17:00"; updateCalc(); renderLists();
-  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
-  document.querySelectorAll("[data-kind]").forEach(b=>b.addEventListener("click",()=>updateKind(b.dataset.kind)));
-  document.querySelectorAll(".toggle").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.opt; state.opts[k]=!state.opts[k]; b.classList.toggle("on",state.opts[k]);}));
-  $("categorySelect").addEventListener("change",()=>{ if(store) setStore("lastCat",$("categorySelect").value); fillSites(); });
-  $("siteSelect").addEventListener("change",()=>{ if(store) setStore("lastSite",$("siteSelect").value); });
-  $("startTime").addEventListener("change",updateCalc); $("endTime").addEventListener("change",updateCalc);
-  $("saveBtn").addEventListener("click",saveRecord);
-  $("reloadBtn").addEventListener("click",()=>{loadLedger(); alert("台帳を再読込しました。");});
-  $("showInputBtn").addEventListener("click",()=>showTab("input"));
-  $("csvBtn").addEventListener("click",csvOut);
-  $("clearBtn").addEventListener("click",()=>{ if(confirm("試験用の入力履歴を削除しますか？")){ if(store) setStore("history",[]); memory.history=[]; renderLists(); }});
-}
-document.addEventListener("DOMContentLoaded", init);
+['start','end'].forEach(x=>$(x).addEventListener('input',calc));
+function show(name){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(name).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));if(name==='list')render()}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.tab));
+$('save').onclick=()=>{
+ const c=calc(),site=$('site').value,note=$('note').value.trim();
+ if(!site&&!note){alert('現場なしの場合は、備考へ内容を入力してください。');return}
+ records.unshift({id:Date.now(),date:$('date').value,name:$('name').value,dept:$('dept').value,site:site||'現場なし',start:$('start').value,end:$('end').value,commute:$('commute').value,transport:[...selectedTransport],note, ...c});
+ localStorage.setItem(KEY,JSON.stringify(records));show('list');
+};
+$('clear').onclick=()=>{
+ $('date').value=today();$('start').value='08:00';$('end').value='17:00';
+ $('commute').value='0';$('note').value='';
+ selectedTransport=[];$('transportPanel').classList.remove('open');
+ renderSelectedTransport();calc();
+};
+$('wipe').onclick=()=>{if(confirm('この端末のテスト履歴を全削除しますか？')){records=[];localStorage.removeItem(KEY);render()}};
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function render(){const el=$('items');el.innerHTML=records.length?'':'<div class="card">テスト履歴はありません。</div>';records.forEach(r=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<h3>${esc(r.date)}　${esc(r.name)}</h3><div class="meta"><div>${esc(r.dept)}</div><div>${esc(r.site)}</div><div>${esc(r.start)}～${esc(r.end)}</div><div>通勤 ${esc(r.commute)}</div><div>平時 ${esc(r.normal)}</div><div>残業 ${esc(r.ot)}</div><div>送迎 ${esc((r.transport||[]).join('、')||'なし')}</div></div><p>${esc(r.note)}</p>`;el.appendChild(d)})}
+renderTransportHistory();renderSelectedTransport();calc();render();
 </script>
 </body>
 </html>
