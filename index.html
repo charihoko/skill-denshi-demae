@@ -1,163 +1,105 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>技能電子出面 V1.4 公開検証版</title>
-<style>
-:root{--bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#657089;--line:#dce3ef;--main:#3157e7;--soft:#edf1ff;--danger:#b91c1c;--ok:#16703a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-header{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#2646c5,#4268ef);color:#fff;padding:14px 16px;box-shadow:0 4px 14px #0002}
-header h1{margin:0;font-size:19px}header p{margin:4px 0 0;font-size:12px}
-.wrap{max-width:720px;margin:auto;padding:12px}.notice{background:#fff7ed;border:1px solid #fdba74;border-radius:14px;padding:12px;margin-bottom:12px;color:#9a3412;font-weight:700}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.tab,.btn{min-height:48px;border-radius:12px;border:0;font:inherit;font-weight:800}
-.tab{background:#fff;border:1px solid var(--line)}.tab.active,.btn{background:var(--main);color:#fff}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px #0f172a0a}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wide{grid-column:1/-1}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}input,select,textarea{width:100%;min-height:46px;border:1px solid var(--line);border-radius:11px;padding:11px;font:inherit;background:#fff}
-textarea{min-height:72px}.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.calc div{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.calc small{display:block;color:var(--muted)}.calc b{font-size:20px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.sub{background:var(--soft);color:var(--main);border:1px solid #c9d2ff}.danger{background:#fee2e2;color:var(--danger);border:1px solid #fecaca}
-.transport-panel{display:none;margin-top:10px;padding:12px;background:#f8fafc;border:1px solid var(--line);border-radius:12px}
-.transport-panel.open{display:block}
-.transport-row{display:grid;grid-template-columns:1fr auto;gap:8px}
-.transport-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.transport-tag{border:1px solid #c9d2ff;background:#edf1ff;color:#3157e7;border-radius:999px;padding:7px 10px;font-size:13px;font-weight:700}
-.item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px}.item h3{font-size:15px;margin:0 0 7px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px}.meta div{background:#f8fafc;padding:8px;border-radius:9px}.hidden{display:none}
-.footer{font-size:12px;color:var(--muted);text-align:center;padding:12px}
-@media(max-width:480px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.actions{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3157e7">
+  <title>技能電子出面 V1.6</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header><h1>技能電子出面 V1.4</h1><p>公開検証版／すべてダミーデータ</p></header>
+<header>
+  <h1>技能電子出面 V1.6</h1>
+  <p id="statusLine">初期設定を確認してください</p>
+</header>
+
 <main class="wrap">
-<div class="notice">このページは動作確認専用です。実名・実際の工事名・会社情報は登録しないでください。</div>
-<div class="tabs"><button class="tab active" data-tab="input">入力</button><button class="tab" data-tab="list">入力を見る</button></div>
+  <div id="securityNotice" class="notice">入力内容と工事台帳は、このiPhoneのSafari内だけに保存されます。Safariの履歴を消すと入力履歴も消えるため、毎日提出してください。</div>
+  <nav class="tabs" aria-label="メニュー">
+    <button class="tab active" data-view="inputView">入力</button>
+    <button class="tab" data-view="historyView">入力を見る</button>
+    <button class="tab" data-view="submitView">提出</button>
+    <button class="tab" data-view="settingsView">設定</button>
+  </nav>
 
-<section id="input">
-<div class="card">
-<div class="grid">
-<div><label>日付</label><input id="date" type="date"></div>
-<div><label>氏名</label><select id="name"><option>テスト太郎</option><option>テスト花子</option><option>技能者A</option></select></div>
-<div><label>部門</label><select id="dept"><option>舗装部</option><option>土木部</option><option>建築部</option></select></div>
-<div><label>現場</label><select id="site"><option>テスト現場A</option><option>テスト現場B</option><option>社内作業</option><option value="">現場なし</option></select></div>
-<div><label>出勤</label><input id="start" type="time" value="08:00"></div>
-<div><label>終業</label><input id="end" type="time" value="17:00"></div>
-<div><label>通勤（数値）</label><input id="commute" type="number" min="0" step="0.5" value="0"></div>
-<div><label>区分</label><select id="kind"><option>通常</option><option>夜勤</option><option>有給</option><option>雨休</option></select></div>
-<div class="wide">
-<label>送迎</label>
-<button type="button" class="btn sub" id="transportBtn" style="width:100%">送迎を入力</button>
-<div class="transport-panel" id="transportPanel">
-<div class="transport-row">
-<input id="transportName" list="transportHistory" placeholder="送迎した人の名前を入力">
-<button type="button" class="btn" id="transportAdd" style="min-width:86px">追加</button>
-</div>
-<datalist id="transportHistory"></datalist>
-<div class="transport-tags" id="transportTags"></div>
-<p style="font-size:12px;color:var(--muted);margin:8px 0 0">一度追加した名前は、この端末に記憶され、次回から候補に表示されます。</p>
-</div>
-</div>
-<div class="wide"><label>備考（現場なしの場合は必須）</label><textarea id="note" placeholder="例：健康診断、講習、安全教育"></textarea></div>
-<div class="wide calc"><div><small>平時</small><b id="normal">7.3</b></div><div><small>残業</small><b id="ot">0.0</b></div><div><small>深夜</small><b id="night">0.0</b></div></div>
-</div>
-<div class="actions"><button class="btn" id="save">保存して確認</button><button class="btn sub" id="clear">入力クリア</button></div>
-</div>
-</section>
+  <section id="inputView" class="view">
+    <div class="worker-line">入力者：<b id="currentWorker">未設定</b></div>
+    <div id="editBanner" class="notice info hidden">入力内容を修正しています。</div>
+    <div class="card">
+      <div class="grid">
+        <div><label for="workDate">日付</label><input id="workDate" type="date"></div>
+        <div><label for="shift">昼夜</label><select id="shift"><option value="day">昼</option><option value="night">夜</option><option value="other">その他</option></select></div>
+        <div><label for="workType">勤務区分</label><select id="workType"><option>通常</option><option>休日</option><option>雨休</option><option>特休</option><option>有給</option></select></div>
+        <div><label for="department">部門</label><select id="department"><option>舗装</option><option>土木</option><option>建築</option><option>共通</option><option>その他</option></select></div>
+        <div class="wide"><label for="site">現場</label><select id="site"><option value="">工事台帳を設定してください</option></select></div>
+        <div><label for="startTime">出勤</label><input id="startTime" type="time" step="1800" value="08:00"></div>
+        <div><label for="endTime">終業</label><input id="endTime" type="time" step="1800" value="17:00"></div>
+        <div><label for="commute">通勤</label><input id="commute" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+        <div><label for="meals">食数</label><select id="meals"><option value="0">0</option><option value="1">1</option></select></div>
+        <div><label for="specialA">特殊A</label><select id="specialA"><option value="0">0</option><option value="1">1</option></select></div>
+        <div><label for="specialB">特殊B</label><select id="specialB"><option value="0">0</option><option value="1">1</option></select></div>
+        <div class="wide">
+          <label>送迎</label>
+          <button type="button" class="btn sub full" id="transportToggle">送迎を入力</button>
+          <div id="transportPanel" class="transport-panel">
+            <div class="transport-row"><input id="transportName" list="transportHistory" placeholder="送迎した人の名前"><button type="button" class="btn" id="transportAdd">追加</button></div>
+            <datalist id="transportHistory"></datalist><div id="transportTags" class="tags"></div>
+          </div>
+        </div>
+        <div class="wide"><label for="note">摘要（現場なしの場合は必須）</label><textarea id="note" placeholder="例：健康診断、講習、安全教育"></textarea></div>
+        <div class="wide calc">
+          <div><small>平時</small><b id="normalDisplay">7.3</b></div>
+          <div><small>残業</small><b id="overtimeDisplay">0.0</b></div>
+          <div><small>深夜</small><b id="nightDisplay">0.0</b></div>
+        </div>
+      </div>
+      <div class="actions"><button class="btn" id="saveRecord">保存して確認</button><button class="btn sub" id="cancelEdit">入力クリア</button></div>
+    </div>
+  </section>
 
-<section id="list" class="hidden">
-<div class="card">
-<b>この端末のテスト履歴</b>
-<p style="font-size:12px;color:var(--muted)">保存先はこのブラウザ内だけです。GitHubやSharePointへ送信されません。</p>
-<button class="btn danger" id="wipe" style="width:100%">テスト履歴を全削除</button>
-</div>
-<div id="items"></div>
-</section>
-<div class="footer">GitHub Pages公開用・ダミーデータ限定</div>
+  <section id="historyView" class="view hidden">
+    <div class="card"><div class="row-between"><div><b>入力履歴</b><p class="muted" id="historySummary"></p></div><input id="historyMonth" type="month" class="compact"></div></div>
+    <div id="historyList"></div>
+  </section>
+
+  <section id="submitView" class="view hidden">
+    <div id="submitState" class="notice info"></div>
+    <div class="card">
+      <h2>本日分を提出</h2>
+      <label for="submitDate">提出する日</label><input id="submitDate" type="date">
+      <div id="submitPreview" class="summary-box"></div>
+      <button class="btn full" id="shareCsv">CSVを作成して共有</button>
+      <button class="btn sub full top-gap" id="downloadCsv">CSVをダウンロード</button>
+      <p class="muted">共有画面で会社のOutlookを選び、設定した宛先へ送信してください。ブラウザはメール送信完了を確認できないため、共有画面を開いた時点を「共有実行済み」と記録します。</p>
+    </div>
+  </section>
+
+  <section id="settingsView" class="view hidden">
+    <div class="card">
+      <h2>利用者設定</h2>
+      <input id="setupFile" class="hidden" type="file" accept=".json,application/json">
+      <button class="btn sub full" id="chooseSetup">初期設定ファイルを読み込む</button>
+      <div class="top-gap"><label for="employeePreset">入力する人</label><select id="employeePreset"><option value="">初期設定ファイルを読み込んでください</option></select></div>
+      <div class="grid">
+        <div><label for="employeeId">社員番号</label><input id="employeeId" inputmode="numeric" readonly></div>
+        <div><label for="employeeName">氏名</label><input id="employeeName" readonly></div>
+        <div><label for="userDepartment">所属部門</label><select id="userDepartment"><option>舗装</option><option>土木</option><option>建築</option></select></div>
+        <div class="wide"><label for="recipientEmail">提出先メールアドレス</label><input id="recipientEmail" type="email" autocomplete="email" readonly></div>
+      </div>
+      <button class="btn full top-gap" id="saveUser">設定を保存</button>
+    </div>
+    <div class="card">
+      <h2>工事台帳</h2>
+      <p id="ledgerStatus">未設定</p>
+      <input id="ledgerFile" class="hidden" type="file" accept=".json,.csv,application/json,text/csv">
+      <button class="btn full top-gap" id="chooseLedger">工事台帳を更新</button>
+      <p class="muted">ボタンを押して会社から受け取った工事台帳を選びます。台帳だけを更新し、出面履歴は消しません。</p>
+    </div>
+    <details class="card danger-zone"><summary>管理用・端末を変更するとき</summary><p class="muted">通常は使用しません。削除には社員番号の再入力が必要です。</p><button class="btn danger full" id="wipeAll">この端末のデータを全削除</button></details>
+  </section>
 </main>
-<script>
-const KEY='skill_denshi_demae_public_demo_v14';
-const TRANSPORT_KEY='skill_denshi_demae_transport_names_v14';
-const $=id=>document.getElementById(id);
-let records=JSON.parse(localStorage.getItem(KEY)||'[]');
-let transportHistory=JSON.parse(localStorage.getItem(TRANSPORT_KEY)||'[]');
-let selectedTransport=[];
-function today(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
-$('date').value=today();
-function minutes(t){const [h,m]=t.split(':').map(Number);return h*60+m}
-function duration(s,e){let a=minutes(s),b=minutes(e);if(b<=a)b+=1440;return b-a}
-function overlap(a1,a2,b1,b2){return Math.max(0,Math.min(a2,b2)-Math.max(a1,b1))}
-function display(min){const h=Math.floor(min/60),m=min%60;return `${h}.${m===30?'3':'0'}`}
-function saveTransportHistory(){
- localStorage.setItem(TRANSPORT_KEY,JSON.stringify(transportHistory));
- renderTransportHistory();
-}
-function renderTransportHistory(){
- $('transportHistory').innerHTML='';
- transportHistory.forEach(name=>{
-   const o=document.createElement('option');
-   o.value=name;
-   $('transportHistory').appendChild(o);
- });
-}
-function renderSelectedTransport(){
- $('transportTags').innerHTML='';
- selectedTransport.forEach((name,index)=>{
-   const b=document.createElement('button');
-   b.type='button';
-   b.className='transport-tag';
-   b.textContent=name+' ×';
-   b.onclick=()=>{selectedTransport.splice(index,1);renderSelectedTransport();};
-   $('transportTags').appendChild(b);
- });
- $('transportBtn').textContent=selectedTransport.length ? `送迎：${selectedTransport.join('、')}` : '送迎を入力';
-}
-$('transportBtn').onclick=()=>{
- $('transportPanel').classList.toggle('open');
- if($('transportPanel').classList.contains('open')) $('transportName').focus();
-};
-$('transportAdd').onclick=()=>{
- const name=$('transportName').value.trim();
- if(!name)return;
- if(!transportHistory.includes(name)){
-   transportHistory.unshift(name);
-   saveTransportHistory();
- }
- if(!selectedTransport.includes(name)) selectedTransport.push(name);
- $('transportName').value='';
- renderSelectedTransport();
-};
-$('transportName').addEventListener('keydown',e=>{
- if(e.key==='Enter'){e.preventDefault();$('transportAdd').click();}
-});
 
-function calc(){
- const s=$('start').value,e=$('end').value; let a=minutes(s),b=minutes(e);if(b<=a)b+=1440;
- const total=b-a, base=Math.min(450,Math.max(0,total-90)), overtime=Math.max(0,total-540);
- const nightMinutes=overlap(a,b,1320,1740)+overlap(a,b,2760,3180);
- $('normal').textContent=display(base);
- $('ot').textContent=display(overtime);
- $('night').textContent=display(Math.max(0,nightMinutes-Math.min(nightMinutes,450)));
- return {normal:$('normal').textContent,ot:$('ot').textContent,night:$('night').textContent};
-}
-['start','end'].forEach(x=>$(x).addEventListener('input',calc));
-function show(name){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(name).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));if(name==='list')render()}
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.tab));
-$('save').onclick=()=>{
- const c=calc(),site=$('site').value,note=$('note').value.trim();
- if(!site&&!note){alert('現場なしの場合は、備考へ内容を入力してください。');return}
- records.unshift({id:Date.now(),date:$('date').value,name:$('name').value,dept:$('dept').value,site:site||'現場なし',start:$('start').value,end:$('end').value,commute:$('commute').value,transport:[...selectedTransport],note, ...c});
- localStorage.setItem(KEY,JSON.stringify(records));show('list');
-};
-$('clear').onclick=()=>{
- $('date').value=today();$('start').value='08:00';$('end').value='17:00';
- $('commute').value='0';$('note').value='';
- selectedTransport=[];$('transportPanel').classList.remove('open');
- renderSelectedTransport();calc();
-};
-$('wipe').onclick=()=>{if(confirm('この端末のテスト履歴を全削除しますか？')){records=[];localStorage.removeItem(KEY);render()}};
-function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
-function render(){const el=$('items');el.innerHTML=records.length?'':'<div class="card">テスト履歴はありません。</div>';records.forEach(r=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<h3>${esc(r.date)}　${esc(r.name)}</h3><div class="meta"><div>${esc(r.dept)}</div><div>${esc(r.site)}</div><div>${esc(r.start)}～${esc(r.end)}</div><div>通勤 ${esc(r.commute)}</div><div>平時 ${esc(r.normal)}</div><div>残業 ${esc(r.ot)}</div><div>送迎 ${esc((r.transport||[]).join('、')||'なし')}</div></div><p>${esc(r.note)}</p>`;el.appendChild(d)})}
-renderTransportHistory();renderSelectedTransport();calc();render();
-</script>
+<script src="calc.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
