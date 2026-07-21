@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#3157e7">
-  <title>技能電子出面 V1.6</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>技能電子出面 V1.7</title>
+  <link rel="stylesheet" href="styles.css?v=1.7.0">
 </head>
 <body>
 <header>
-  <h1>技能電子出面 V1.6</h1>
+  <h1>技能電子出面 V1.7</h1>
   <p id="statusLine">初期設定を確認してください</p>
 </header>
 
 <main class="wrap">
-  <div id="securityNotice" class="notice">入力内容と工事台帳は、このiPhoneのSafari内だけに保存されます。Safariの履歴を消すと入力履歴も消えるため、毎日提出してください。</div>
+  <div id="securityNotice" class="notice">入力内容と工事台帳は、このiPhoneのSafari内に保存されます。毎日入力し、月末に当月分を提出してください。端末の故障・紛失時は、紙へ記録するか山下さんまで連絡してください。</div>
   <nav class="tabs" aria-label="メニュー">
     <button class="tab active" data-view="inputView">入力</button>
     <button class="tab" data-view="historyView">入力を見る</button>
@@ -65,12 +65,12 @@
   <section id="submitView" class="view hidden">
     <div id="submitState" class="notice info"></div>
     <div class="card">
-      <h2>本日分を提出</h2>
-      <label for="submitDate">提出する日</label><input id="submitDate" type="date">
+      <h2>月次提出</h2>
+      <label for="submitMonth">提出する月</label><input id="submitMonth" type="month">
       <div id="submitPreview" class="summary-box"></div>
       <button class="btn full" id="shareCsv">CSVを作成して共有</button>
       <button class="btn sub full top-gap" id="downloadCsv">CSVをダウンロード</button>
-      <p class="muted">共有画面で会社のOutlookを選び、設定した宛先へ送信してください。ブラウザはメール送信完了を確認できないため、共有画面を開いた時点を「共有実行済み」と記録します。</p>
+      <p class="muted">共有画面で会社のOutlookを選び、設定した宛先へ送信してください。提出後も履歴は残ります。提出後に修正・削除した場合は、同じ月を再提出してください。</p>
     </div>
   </section>
 
@@ -99,7 +99,7 @@
   </section>
 </main>
 
-<script src="calc.js"></script>
-<script src="app.js"></script>
+<script src="calc.js?v=1.7.0"></script>
+<script src="app.js?v=1.7.0"></script>
 </body>
 </html>
