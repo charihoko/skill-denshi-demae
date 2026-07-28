@@ -1,6 +1,6 @@
 (function(){
 "use strict";
-const APP_VERSION="1.8.0",SCHEMA_VERSION=1;
+const APP_VERSION="1.8.1",SCHEMA_VERSION=1;
 const KEYS={user:"demae.user",config:"demae.config",ledger:"demae.ledger",records:"demae.records",submissions:"demae.submissions",preferences:"demae.preferences",system:"demae.system"};
 const $=id=>document.getElementById(id),now=()=>new Date().toISOString();
 const localDate=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
@@ -20,9 +20,10 @@ function setToday(){const month=localDate().slice(0,7);$("workDate").value=local
 function timeOptions(){return Array.from({length:48},(_,i)=>{const h=String(Math.floor(i/2)).padStart(2,"0"),m=i%2?"30":"00",v=`${h}:${m}`;return `<option value="${v}">${v}</option>`}).join("")}
 $("startTime").innerHTML=timeOptions();$("endTime").innerHTML=timeOptions();
 function setTime(id,value){const el=$(id);if(![...el.options].some(o=>o.value===value)){const o=document.createElement("option");o.value=value;o.textContent=`${value}（旧入力）`;el.appendChild(o)}el.value=value}
-function setCommute(value){const n=Number(value);$("commute").value=Number.isInteger(n)&&n>=0&&n<=200?n:0;$("commuteSelect").value=$("commute").value}
+function setCommute(value){const n=Number(value),valid=Number.isInteger(n)&&n>=0&&n<=200;$("commuteSelect").value=String(valid?n:0);$("commute").value=""}
+function commuteValue(){return $("commute").value===""?Number($("commuteSelect").value):Number($("commute").value)}
 $("commuteSelect").innerHTML=Array.from({length:201},(_,i)=>`<option value="${i}">${i} km</option>`).join("");
-$("commuteSelect").onchange=()=>{$("commute").value=$("commuteSelect").value};
+$("commuteSelect").onchange=()=>{$("commute").value=""};
 $("commute").oninput=()=>{const n=Number($("commute").value);if(Number.isInteger(n)&&n>=0&&n<=200)$("commuteSelect").value=String(n)};
 function calc(){const c=DemaeCalc.calculate($("startTime").value,$("endTime").value,$("workType").value);$("normalDisplay").textContent=c.normalDisplay;$("overtimeDisplay").textContent=c.overtimeDisplay;$("nightDisplay").textContent=c.nightDisplay;return c}
 function setShift(){if($("shift").value==="night"){setTime("startTime","20:00");setTime("endTime","05:00")}else if($("shift").value==="day"){setTime("startTime","08:00");setTime("endTime","17:00")}calc()}
@@ -36,13 +37,13 @@ function resetForm(){editingId=null;$("editBanner").classList.add("hidden");$("s
 $("cancelEdit").onclick=resetForm;
 $("saveRecord").onclick=()=>{
   if(!user.employeeId||!user.name){alert("先に設定画面で社員番号と氏名を登録してください。");show("settingsView");return}
-  if($("commute").value===""||!Number.isInteger(Number($("commute").value))||Number($("commute").value)<0||Number($("commute").value)>200){alert("通勤は0～200の整数で入力してください。");return}
+  const commute=commuteValue();if(!Number.isInteger(commute)||commute<0||commute>200){alert("通勤は0～200の整数で入力してください。");return}
   const siteCode=$("site").value,note=$("note").value.trim(),absence=["休日","雨休","特休","有給"].includes($("workType").value);if(!siteCode&&!note&&!absence){alert("現場なしの場合は、摘要へ内容を入力してください。");return}
   const sameShift=records.find(x=>!x.deleted&&x.recordId!==editingId&&x.workDate===$("workDate").value&&x.shift===$("shift").value);
   if(sameShift){const shiftLabel=$("shift").value==="night"?"夜":$("shift").value==="day"?"昼":"その他";if(!confirm(`${$("workDate").value}の${shiftLabel}勤務は既に入力されています。\n同じ区分をもう1件追加しますか？`))return}
   const previous=records.find(x=>x.recordId===editingId),c=calc(),stamp=now();
   const special=$("special").value;
-  const r={recordId:editingId||uid(),schemaVersion:SCHEMA_VERSION,employeeId:user.employeeId,employeeName:user.name,workDate:$("workDate").value,targetMonth:$("workDate").value.slice(0,7),shift:$("shift").value,workType:$("workType").value,department:$("department").value,siteCode,siteName:selectedSiteName(),startTime:$("startTime").value,endTime:$("endTime").value,crossesMidnight:$("endTime").value<=$("startTime").value,breakMinutes:90,commute:Number($("commute").value),transport:[...selectedTransport],meals:Number($("meals").value||0),specialA:special==="A"?1:0,specialB:special==="B"?1:0,note,...c,createdAt:previous?.createdAt||stamp,updatedAt:stamp,revision:(previous?.revision||0)+1,status:previous?.status==="submitted"?"modified":"draft",deleted:false};
+  const r={recordId:editingId||uid(),schemaVersion:SCHEMA_VERSION,employeeId:user.employeeId,employeeName:user.name,workDate:$("workDate").value,targetMonth:$("workDate").value.slice(0,7),shift:$("shift").value,workType:$("workType").value,department:$("department").value,siteCode,siteName:selectedSiteName(),startTime:$("startTime").value,endTime:$("endTime").value,crossesMidnight:$("endTime").value<=$("startTime").value,breakMinutes:90,commute,transport:[...selectedTransport],meals:Number($("meals").value||0),specialA:special==="A"?1:0,specialB:special==="B"?1:0,note,...c,createdAt:previous?.createdAt||stamp,updatedAt:stamp,revision:(previous?.revision||0)+1,status:previous?.status==="submitted"?"modified":"draft",deleted:false};
   if(previous)records=records.map(x=>x.recordId===r.recordId?r:x);else records.push(r);prefs.lastSite=siteCode;prefs.lastCommute=r.commute;prefs.lastTransport=[...selectedTransport];save(KEYS.records,records);save(KEYS.preferences,prefs);resetForm();show("historyView");
 };
 function dayRecords(date,includeDeleted=false){return records.filter(x=>x.workDate===date&&(includeDeleted||!x.deleted))}

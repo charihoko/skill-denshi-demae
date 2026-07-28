@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#3157e7">
   <title>技能電子出面 V1.8</title>
-  <link rel="stylesheet" href="styles.css?v=1.8.0">
+  <link rel="stylesheet" href="styles.css?v=1.8.1">
 </head>
 <body>
 <header>
@@ -34,7 +34,7 @@
         <div><label for="site">現場</label><select id="site"><option value="">工事台帳を設定してください</option></select></div>
         <div><label for="startTime">出勤</label><select id="startTime"></select></div>
         <div><label for="endTime">終業</label><select id="endTime"></select></div>
-        <div class="wide"><label for="commuteSelect">通勤距離（km）</label><div class="commute-row"><select id="commuteSelect" aria-label="通勤距離を選択"></select><input id="commute" type="number" min="0" max="200" step="1" value="0" inputmode="numeric" aria-label="通勤距離を手入力"></div><p class="muted">0～200km。ホイール選択または手入力できます。</p></div>
+        <div class="wide"><label for="commuteSelect">通勤距離（km）</label><div class="commute-row"><select id="commuteSelect" aria-label="通勤距離を選択"></select><input id="commute" type="number" min="0" max="200" step="1" inputmode="numeric" placeholder="直接入力" aria-label="通勤距離を手入力"></div><p class="muted">0～200km。ホイール選択または手入力できます。</p></div>
         <div><label for="meals">食数</label><select id="meals"><option value="0">0</option><option value="1">1</option></select></div>
         <div><label for="special">特殊</label><select id="special"><option value="">無し</option><option value="A">A</option><option value="B">B</option></select></div>
         <div class="wide">
@@ -94,7 +94,7 @@
   </section>
 </main>
 
-<script src="calc.js?v=1.8.0"></script>
-<script src="app.js?v=1.8.0"></script>
+<script src="calc.js?v=1.8.1"></script>
+<script src="app.js?v=1.8.1"></script>
 </body>
 </html>
