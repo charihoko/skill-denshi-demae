@@ -61,7 +61,9 @@ $("saveRecord").onclick=()=>{
   if(previous)records=records.map(x=>x.recordId===r.recordId?r:x);else records.push(r);prefs.lastSite=siteCode;prefs.lastDepartment=r.department;prefs.lastCommute=r.commute;prefs.lastTransport=[...selectedTransport];save(KEYS.records,records);save(KEYS.preferences,prefs);resetForm();show("historyView");
 };
 function dayRecords(date,includeDeleted=false){return records.filter(x=>x.workDate===date&&(includeDeleted||!x.deleted))}
-function previousDate(date){const d=new Date(`${date}T00:00:00`);d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function latestPreviousWorkDate(date){
+  return records.filter(x=>!x.deleted&&x.workDate<date).map(x=>x.workDate).sort((a,b)=>b.localeCompare(a))[0]||"";
+}
 function applyCopiedRecord(r){
   $("shift").value=r.shift||"day";$("workType").value=[...$("workType").options].some(x=>x.value===r.workType)?r.workType:"通常";
   $("department").value=r.department||user.department||"舗装";renderManagers();$("manager").value="";renderSites();$("site").value=r.siteCode||"";
@@ -72,8 +74,9 @@ function applyCopiedRecord(r){
 }
 $("copyPrevious").onclick=()=>{
   if(editingId){alert("修正中は「前日と同じ」を使用できません。入力クリア後に使用してください。");return}
-  const date=$("workDate").value,previous=previousDate(date),list=dayRecords(previous).sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
-  if(!list.length){alert(`${previous}の保存済み入力はありません。`);return}
+  const date=$("workDate").value,previous=latestPreviousWorkDate(date);
+  if(!previous){alert(`${date}より前の保存済み入力はありません。`);return}
+  const list=dayRecords(previous).sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
   let chosen=list[0];
   if(list.length>1){
     const options=list.map((r,i)=>`${i+1}：${r.shift==="night"?"夜":"昼"}／${r.siteName||"現場なし"}／${r.startTime}～${r.endTime}`).join("\n");
