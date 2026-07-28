@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#3157e7">
-  <title>技能電子出面 V1.7</title>
-  <link rel="stylesheet" href="styles.css?v=1.7.0">
+  <title>技能電子出面 V1.8</title>
+  <link rel="stylesheet" href="styles.css?v=1.8.0">
 </head>
 <body>
 <header>
-  <h1>技能電子出面 V1.7</h1>
+  <h1>技能電子出面 V1.8</h1>
   <p id="statusLine">初期設定を確認してください</p>
 </header>
 
@@ -18,7 +18,6 @@
   <nav class="tabs" aria-label="メニュー">
     <button class="tab active" data-view="inputView">入力</button>
     <button class="tab" data-view="historyView">入力を見る</button>
-    <button class="tab" data-view="submitView">提出</button>
     <button class="tab" data-view="settingsView">設定</button>
   </nav>
 
@@ -31,13 +30,13 @@
         <div><label for="shift">昼夜</label><select id="shift"><option value="day">昼</option><option value="night">夜</option><option value="other">その他</option></select></div>
         <div><label for="workType">勤務区分</label><select id="workType"><option>通常</option><option>休日</option><option>雨休</option><option>特休</option><option>有給</option></select></div>
         <div><label for="department">部門</label><select id="department"><option>舗装</option><option>土木</option><option>建築</option><option>共通</option><option>その他</option></select></div>
-        <div class="wide"><label for="site">現場</label><select id="site"><option value="">工事台帳を設定してください</option></select></div>
-        <div><label for="startTime">出勤</label><input id="startTime" type="time" step="1800" value="08:00"></div>
-        <div><label for="endTime">終業</label><input id="endTime" type="time" step="1800" value="17:00"></div>
-        <div><label for="commute">通勤</label><input id="commute" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+        <div><label for="manager">監督名（任意）</label><select id="manager"><option value="">指定しない</option></select></div>
+        <div><label for="site">現場</label><select id="site"><option value="">工事台帳を設定してください</option></select></div>
+        <div><label for="startTime">出勤</label><select id="startTime"></select></div>
+        <div><label for="endTime">終業</label><select id="endTime"></select></div>
+        <div class="wide"><label for="commuteSelect">通勤距離（km）</label><div class="commute-row"><select id="commuteSelect" aria-label="通勤距離を選択"></select><input id="commute" type="number" min="0" max="200" step="1" value="0" inputmode="numeric" aria-label="通勤距離を手入力"></div><p class="muted">0～200km。ホイール選択または手入力できます。</p></div>
         <div><label for="meals">食数</label><select id="meals"><option value="0">0</option><option value="1">1</option></select></div>
-        <div><label for="specialA">特殊A</label><select id="specialA"><option value="0">0</option><option value="1">1</option></select></div>
-        <div><label for="specialB">特殊B</label><select id="specialB"><option value="0">0</option><option value="1">1</option></select></div>
+        <div><label for="special">特殊</label><select id="special"><option value="">無し</option><option value="A">A</option><option value="B">B</option></select></div>
         <div class="wide">
           <label>送迎</label>
           <button type="button" class="btn sub full" id="transportToggle">送迎を入力</button>
@@ -53,23 +52,19 @@
           <div><small>深夜</small><b id="nightDisplay">0.0</b></div>
         </div>
       </div>
-      <div class="actions"><button class="btn" id="saveRecord">保存して確認</button><button class="btn sub" id="cancelEdit">入力クリア</button></div>
+      <div class="actions"><button class="btn" id="saveRecord">入力を保存</button><button class="btn sub" id="cancelEdit">入力クリア</button></div>
     </div>
   </section>
 
   <section id="historyView" class="view hidden">
     <div class="card"><div class="row-between"><div><b>入力履歴</b><p class="muted" id="historySummary"></p></div><input id="historyMonth" type="month" class="compact"></div></div>
     <div id="historyList"></div>
-  </section>
-
-  <section id="submitView" class="view hidden">
     <div id="submitState" class="notice info"></div>
     <div class="card">
       <h2>月次提出</h2>
       <label for="submitMonth">提出する月</label><input id="submitMonth" type="month">
       <div id="submitPreview" class="summary-box"></div>
-      <button class="btn full" id="shareCsv">CSVを作成して共有</button>
-      <button class="btn sub full top-gap" id="downloadCsv">CSVをダウンロード</button>
+      <button class="btn full" id="shareCsv">この月分を提出</button>
       <p class="muted">共有画面で会社のOutlookを選び、設定した宛先へ送信してください。提出後も履歴は残ります。提出後に修正・削除した場合は、同じ月を再提出してください。</p>
     </div>
   </section>
@@ -99,7 +94,7 @@
   </section>
 </main>
 
-<script src="calc.js?v=1.7.0"></script>
-<script src="app.js?v=1.7.0"></script>
+<script src="calc.js?v=1.8.0"></script>
+<script src="app.js?v=1.8.0"></script>
 </body>
 </html>
