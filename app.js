@@ -24,7 +24,7 @@ function setCommute(value){const n=Number(value),valid=Number.isInteger(n)&&n>=0
 function commuteValue(){return $("commute").value===""?Number($("commuteSelect").value):Number($("commute").value)}
 $("commuteSelect").innerHTML=Array.from({length:201},(_,i)=>`<option value="${i}">${i} km</option>`).join("");
 $("commuteSelect").onchange=()=>{$("commute").value=""};
-$("commute").oninput=()=>{const n=Number($("commute").value);if(Number.isInteger(n)&&n>=0&&n<=200)$("commuteSelect").value=String(n)};
+$("commute").oninput=()=>{const value=$("commute").value;if(value==="")return;const n=Number(value);if(Number.isInteger(n)&&n>=0&&n<=200)$("commuteSelect").value=String(n)};
 function calc(){const c=DemaeCalc.calculate($("startTime").value,$("endTime").value,$("workType").value);$("normalDisplay").textContent=c.normalDisplay;$("overtimeDisplay").textContent=c.overtimeDisplay;$("nightDisplay").textContent=c.nightDisplay;return c}
 function setShift(){if($("shift").value==="night"){setTime("startTime","20:00");setTime("endTime","05:00")}else if($("shift").value==="day"){setTime("startTime","08:00");setTime("endTime","17:00")}calc()}
 [$("startTime"),$("endTime")].forEach(x=>x.addEventListener("input",calc));$("workType").addEventListener("change",calc);$("shift").addEventListener("change",setShift);$("department").addEventListener("change",()=>{renderManagers();renderSites()});$("manager").addEventListener("change",renderSites);
