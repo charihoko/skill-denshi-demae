@@ -4,7 +4,7 @@
   function overlap(a1,a2,b1,b2){return Math.max(0,Math.min(a2,b2)-Math.max(a1,b1))}
   function display(minutes){const sign=minutes<0?"-":"";minutes=Math.abs(Math.round(minutes/30)*30);const h=Math.floor(minutes/60),m=minutes%60;return `${sign}${h}.${m===30?"3":"0"}`}
   function zero(){return {totalMinutes:0,normalMinutes:0,overtimeMinutes:0,nightMinutes:0,overtime100Minutes:0,overtime025Minutes:0,night025Minutes:0,normalDisplay:"0.0",overtimeDisplay:"0.0",nightDisplay:"0.0"}}
-  function calculate(start,end,workType="通常",isHoliday=false){
+  function calculate(start,end,workType="通常",isHoliday=false,shift="day"){
     if(["雨休","特休","有給"].includes(workType))return zero();
     let a=toMinutes(start),b=toMinutes(end);if(b<=a)b+=1440;
     const total=b-a;
@@ -14,7 +14,13 @@
     const nightAll=overlap(a,b,1320,1740)+overlap(a,b,2760,3180);
     const regularEnd=a+540;
     const nightOutside=overlap(Math.max(a,regularEnd),b,1320,1740)+overlap(Math.max(a,regularEnd),b,2760,3180);
-    return {totalMinutes:total,normalMinutes:normal,overtimeMinutes:overtime,nightMinutes:nightOutside,overtime100Minutes:overtime,overtime025Minutes:nightAll,night025Minutes:nightOutside,normalDisplay:display(normal),overtimeDisplay:display(overtime),nightDisplay:display(nightOutside)};
+    if(isHoliday||shift!=="night"){
+      return {totalMinutes:total,normalMinutes:normal,overtimeMinutes:overtime,nightMinutes:nightOutside,overtime100Minutes:overtime,overtime025Minutes:nightAll,night025Minutes:nightOutside,normalDisplay:display(normal),overtimeDisplay:display(overtime),nightDisplay:display(nightOutside)};
+    }
+    const overtimeStart=Math.min(b,regularEnd);
+    const overtimeNightOverlap=overlap(overtimeStart,b,1320,1740)+overlap(overtimeStart,b,2760,3180);
+    const overtime025=nightAll+overtime-overtimeNightOverlap;
+    return {totalMinutes:total,normalMinutes:normal,overtimeMinutes:overtime,nightMinutes:overtimeNightOverlap,overtime100Minutes:overtime,overtime025Minutes:overtime025,night025Minutes:overtimeNightOverlap,normalDisplay:display(normal),overtimeDisplay:display(overtime025),nightDisplay:display(overtimeNightOverlap)};
   }
   global.DemaeCalc={calculate,display};
 })(window);
