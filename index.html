@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#3157e7">
-  <title>技能電子出面 V2.0</title>
-  <link rel="stylesheet" href="styles.css?v=2.0">
+  <title>技能電子出面 V2.1</title>
+  <link rel="stylesheet" href="styles.css?v=2.1">
 </head>
 <body>
 <header>
-  <h1>技能電子出面 V2.0</h1>
+  <h1>技能電子出面 V2.1</h1>
   <p id="statusLine">初期設定を確認してください</p>
 </header>
 
@@ -51,9 +51,10 @@
           <div><small>平時</small><b id="normalDisplay">7.3</b></div>
           <div><small>残業</small><b id="overtimeDisplay">0.0</b></div>
           <div><small>深夜</small><b id="nightDisplay">0.0</b></div>
+          <div><small>休日</small><b id="holidayDisplay">0.0</b></div>
         </div>
       </div>
-      <div class="actions"><button class="btn sub" id="copyPrevious">前日と同じ</button><button class="btn" id="saveRecord">入力を保存</button><button class="btn sub" id="cancelEdit">入力クリア</button></div>
+      <div class="actions"><button class="btn" id="saveRecord">入力を保存</button><button class="btn sub" id="cancelEdit">入力クリア</button></div>
     </div>
   </section>
 
@@ -89,13 +90,13 @@
       <p id="ledgerStatus">未設定</p>
       <input id="ledgerFile" class="hidden" type="file" accept=".json,.csv,application/json,text/csv">
       <button class="btn full top-gap" id="chooseLedger">工事台帳を更新</button>
-      <p class="muted">ボタンを押して会社から受け取った工事台帳を選びます。台帳だけを更新し、出面履歴は消しません。</p>
+      <p class="muted">ボタンを押して会社から受け取った工事台帳を選びます。工事台帳と年間休日カレンダーを同時に更新し、出面履歴は消しません。</p>
     </div>
     <details class="card danger-zone"><summary>管理用・端末を変更するとき</summary><p class="muted">通常は使用しません。削除には社員番号の再入力が必要です。</p><button class="btn danger full" id="wipeAll">この端末のデータを全削除</button></details>
   </section>
 </main>
 
-<script src="calc.js?v=2.0"></script>
-<script src="app.js?v=2.0"></script>
+<script src="calc.js?v=2.2"></script>
+<script src="app.js?v=2.2"></script>
 </body>
 </html>
