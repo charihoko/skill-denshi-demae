@@ -4,17 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#3157e7">
-  <title>技能電子出面 V2.6.2</title>
-  <link rel="stylesheet" href="styles.css?v=2.6.2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="技能電子出面">
+  <link rel="manifest" href="manifest.json?v=2.6.5">
+  <title>技能電子出面 V2.6.5</title>
+  <link rel="stylesheet" href="styles.css?v=2.6.5">
 </head>
 <body>
 <header>
-  <h1>技能電子出面 V2.6.2</h1>
+  <h1>技能電子出面 V2.6.5</h1>
   <p id="statusLine">初期設定を確認してください</p>
 </header>
 
 <main class="wrap">
-  <div id="securityNotice" class="notice">入力内容と工事台帳は、このiPhoneのSafari内に保存されます。毎日入力し、月末に当月分を提出してください。端末の故障・紛失時は、紙へ記録するか山下さんまで連絡してください。</div>
+  <div id="storageGuard" class="notice info hidden"></div>
+  <div id="securityNotice" class="notice">入力内容と工事台帳は、このiPhone内に保存されます。Safariからでもホーム画面からでも使用できます。ただし両者の保存領域が別になる場合があるため、途中で使い方を切り替える場合は設定の「データ引継ぎ」を使用してください。毎日入力し、月末に当月分を提出してください。</div>
   <nav class="tabs" aria-label="メニュー">
     <button class="tab active" data-view="inputView">入力</button>
     <button class="tab" data-view="historyView">入力を見る</button>
@@ -92,11 +97,21 @@
       <button class="btn full top-gap" id="chooseLedger">工事台帳を更新</button>
       <p class="muted">ボタンを押して会社から受け取った工事台帳を選びます。工事台帳と年間休日カレンダーを同時に更新し、出面履歴は消しません。</p>
     </div>
-    <details class="card danger-zone"><summary>管理用・端末を変更するとき</summary><p class="muted">通常は使用しません。削除には社員番号の再入力が必要です。</p><button class="btn danger full" id="wipeAll">この端末のデータを全削除</button></details>
+    <div class="card">
+      <h2>データ引継ぎ</h2>
+      <p class="muted">Safari版とホーム画面版を切り替えるとき、または端末変更時に使用します。通常の入力では操作不要です。</p>
+      <button class="btn sub full" id="exportTransfer">引継ぎ・バックアップファイルを作る</button>
+      <input id="transferFile" class="hidden" type="file" accept=".json,application/json">
+      <button class="btn sub full top-gap" id="chooseTransfer">引継ぎファイルを読み込む</button>
+      <p class="muted">切替前の画面でバックアップを作り、切替後の画面で読み込みます。利用者設定・工事台帳・入力履歴・提出履歴をまとめて引き継ぎます。</p>
+      <button class="btn sub full top-gap" id="checkStorage">この端末の保存状態を確認</button>
+      <p class="muted">入力が消えたように見えるときや、端末・起動方法を変更したときに使用してください。</p>
+    </div>
+    <details class="card danger-zone"><summary>管理用・データを削除するとき</summary><p class="muted">通常は使用しません。削除には社員番号の再入力が必要です。</p><button class="btn danger full" id="wipeAll">この端末のデータを全削除</button></details>
   </section>
 </main>
 
-<script src="calc.js?v=2.6.2"></script>
-<script src="app.js?v=2.6.2"></script>
+<script src="calc.js?v=2.6.5"></script>
+<script src="app.js?v=2.6.5"></script>
 </body>
 </html>

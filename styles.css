@@ -9,3 +9,5 @@
 .history-grid small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
 .history-grid .site-cell{grid-column:1/-1;overflow-wrap:anywhere}
 @media(max-width:480px){.tabs{grid-template-columns:repeat(3,1fr)}}
+
+button:disabled{opacity:.45;cursor:not-allowed}

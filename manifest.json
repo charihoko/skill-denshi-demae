@@ -1,0 +1,11 @@
+{
+  "name": "技能電子出面 V2.6.5",
+  "short_name": "技能電子出面",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3157e7",
+  "lang": "ja",
+  "id": "./"
+}
