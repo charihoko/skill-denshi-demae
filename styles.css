@@ -11,3 +11,17 @@
 @media(max-width:480px){.tabs{grid-template-columns:repeat(3,1fr)}}
 
 button:disabled{opacity:.45;cursor:not-allowed}
+
+/* V2.6.8: 入力履歴をスクロールしても表示月・有給・雨休を常時表示 */
+.history-sticky{position:sticky;top:72px;z-index:9;padding:10px 12px;box-shadow:0 5px 16px #0f172a26}
+.history-sticky-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.history-month{flex:1;min-width:0}
+.history-month label{margin-bottom:3px;font-weight:700}
+.history-month .compact{width:100%;min-height:42px;padding:7px 8px}
+.leave-counts{display:flex;gap:6px;flex:none;padding-bottom:2px}
+.leave-count{white-space:nowrap;border-radius:999px;padding:8px 10px;font-size:13px;font-weight:700;border:1px solid currentColor;background:#fff}
+.leave-count b{font-size:16px}
+.leave-count.paid{color:#c62828;background:#fff1f2}
+.leave-count.rain{color:#16803d;background:#ecfdf3}
+.history-summary{margin:7px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:480px){.history-sticky{top:68px}.history-sticky-row{gap:6px}.leave-counts{gap:4px}.leave-count{padding:7px 8px;font-size:12px}.leave-count b{font-size:15px}}

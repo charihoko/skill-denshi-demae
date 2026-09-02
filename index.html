@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="技能電子出面">
-  <link rel="manifest" href="manifest.json?v=2.6.7">
-  <title>技能電子出面 V2.6.7</title>
-  <link rel="stylesheet" href="styles.css?v=2.6.7">
+  <link rel="manifest" href="manifest.json?v=2.6.8">
+  <title>技能電子出面 V2.6.8</title>
+  <link rel="stylesheet" href="styles.css?v=2.6.8">
 </head>
 <body>
 <header>
-  <h1>技能電子出面 V2.6.7</h1>
+  <h1>技能電子出面 V2.6.8</h1>
   <p id="statusLine">初期設定を確認してください</p>
 </header>
 
@@ -64,7 +64,16 @@
   </section>
 
   <section id="historyView" class="view hidden">
-    <div class="card"><div class="row-between"><div><b>入力履歴</b><p class="muted" id="historySummary"></p></div><input id="historyMonth" type="month" class="compact"></div></div>
+    <div class="card history-sticky" aria-label="表示月の休暇日数">
+      <div class="history-sticky-row">
+        <div class="history-month"><label for="historyMonth">表示月</label><input id="historyMonth" type="month" class="compact"></div>
+        <div class="leave-counts" aria-live="polite">
+          <span class="leave-count paid">有給 <b id="historyPaidLeave">0日</b></span>
+          <span class="leave-count rain">雨休 <b id="historyRainLeave">0日</b></span>
+        </div>
+      </div>
+      <p class="muted history-summary" id="historySummary"></p>
+    </div>
     <div id="historyList"></div>
     <div id="submitState" class="notice info"></div>
     <div class="card">
@@ -111,7 +120,7 @@
   </section>
 </main>
 
-<script src="calc.js?v=2.6.7"></script>
-<script src="app.js?v=2.6.7"></script>
+<script src="calc.js?v=2.6.8"></script>
+<script src="app.js?v=2.6.8"></script>
 </body>
 </html>
