@@ -11,6 +11,13 @@
   function dateUTC(s){const [y,m,d]=String(s).split("-").map(Number);return new Date(Date.UTC(y,m-1,d))}
   function iso(d){return d.toISOString().slice(0,10)}
   function weekInfo(workDate,workDates=[]){const d=dateUTC(workDate),day=d.getUTCDay(),s=new Date(d);s.setUTCDate(s.getUTCDate()-day);const e=new Date(s);e.setUTCDate(e.getUTCDate()+6);const start=iso(s),end=iso(e),monthCross=start.slice(0,7)!==end.slice(0,7);const set=new Set((workDates||[]).filter(x=>x>=start&&x<=end));return {start,end,monthCross,workDays:set.size}}
+  // V2.6.8.9：月をまたぐ週（日～土の途中で月が変わる週）は、会社休日カレンダー上の休日
+  // （日曜・祝日・会社休日）に出勤した時点で、6日目到達を待たずに即「休日出勤」として計上する。
+  // 月またぎでない週は従来どおり、週内で重複なく数えた勤務日数が6日以上に達した時点でのみ
+  // 「休日出勤」とし、5日目までの会社休日勤務は「残業」とする。
+  // 月またぎ週の休日判定は週の日付だけで確定する（月またぎ自体は日付から一意に決まり、
+  // 翌月側の入力状況に左右されないため）ので、後から翌月分を入力・編集・削除しても
+  // 「休日」から「残業」へ戻ることはない。
   function holidayTreatment(workDate,workDates=[]){const info=weekInfo(workDate,workDates);return {...info,treatment:(info.monthCross||info.workDays>=6)?"holiday":"overtime"}}
   function calculate(start,end,workType="通常",isCalendarHoliday=false,shift="day",treatment="overtime"){
     if(["雨休","特休","有給","欠勤"].includes(workType))return zero();
