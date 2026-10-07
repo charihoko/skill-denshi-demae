@@ -20,7 +20,7 @@
   // 「休日」から「残業」へ戻ることはない。
   function holidayTreatment(workDate,workDates=[]){const info=weekInfo(workDate,workDates);return {...info,treatment:(info.monthCross||info.workDays>=6)?"holiday":"overtime"}}
   function calculate(start,end,workType="通常",isCalendarHoliday=false,shift="day",treatment="overtime"){
-    if(["雨休","特休","有給","欠勤"].includes(workType))return zero();
+    if(["雨休","特休","有給","欠勤","振休"].includes(workType))return zero();
     let a=toMinutes(start),b=toMinutes(end);
     if(a===null)return invalid("INVALID_START","開始時刻を正しい形式（例 08:00）で入力してください。");
     if(b===null)return invalid("INVALID_END","終了時刻を正しい形式（例 17:00）で入力してください。");
