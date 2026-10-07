@@ -8,6 +8,9 @@
 .history-grid div{background:#f8fafc;padding:8px;border-radius:9px;min-width:0}
 .history-grid small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
 .history-grid .site-cell{grid-column:1/-1;overflow-wrap:anywhere}
+.date-leave-tag{font-size:13px;font-weight:800;margin-left:4px}
+.date-leave-tag.paid{color:#c62828}
+.date-leave-tag.rain{color:#16803d}
 @media(max-width:480px){.tabs{grid-template-columns:repeat(3,1fr)}}
 
 button:disabled{opacity:.45;cursor:not-allowed}
