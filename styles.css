@@ -12,6 +12,8 @@
 .date-leave-tag.paid{color:#c62828}
 .date-leave-tag.rain{color:#16803d}
 .date-leave-tag.transfer{color:#1d4ed8}
+.date-leave-tag.review{color:#b45309}
+.review-note{color:#b45309;font-weight:700}
 @media(max-width:480px){.tabs{grid-template-columns:repeat(3,1fr)}}
 
 button:disabled{opacity:.45;cursor:not-allowed}

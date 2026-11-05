@@ -11,14 +11,33 @@
   function dateUTC(s){const [y,m,d]=String(s).split("-").map(Number);return new Date(Date.UTC(y,m-1,d))}
   function iso(d){return d.toISOString().slice(0,10)}
   function weekInfo(workDate,workDates=[]){const d=dateUTC(workDate),day=d.getUTCDay(),s=new Date(d);s.setUTCDate(s.getUTCDate()-day);const e=new Date(s);e.setUTCDate(e.getUTCDate()+6);const start=iso(s),end=iso(e),monthCross=start.slice(0,7)!==end.slice(0,7);const set=new Set((workDates||[]).filter(x=>x>=start&&x<=end));return {start,end,monthCross,workDays:set.size}}
-  // V2.6.8.9：月をまたぐ週（日～土の途中で月が変わる週）は、会社休日カレンダー上の休日
-  // （日曜・祝日・会社休日）に出勤した時点で、6日目到達を待たずに即「休日出勤」として計上する。
-  // 月またぎでない週は従来どおり、週内で重複なく数えた勤務日数が6日以上に達した時点でのみ
-  // 「休日出勤」とし、5日目までの会社休日勤務は「残業」とする。
-  // 月またぎ週の休日判定は週の日付だけで確定する（月またぎ自体は日付から一意に決まり、
-  // 翌月側の入力状況に左右されないため）ので、後から翌月分を入力・編集・削除しても
-  // 「休日」から「残業」へ戻ることはない。
-  function holidayTreatment(workDate,workDates=[]){const info=weekInfo(workDate,workDates);return {...info,treatment:(info.monthCross||info.workDays>=6)?"holiday":"overtime"}}
+  // 週の日～土の7日分の日付（ISO文字列）を返す。weekday は workDate 自身の曜日（0=日～6=土）。
+  function weekDates(workDate){const d=dateUTC(workDate),weekday=d.getUTCDay(),s=new Date(d);s.setUTCDate(s.getUTCDate()-weekday);const dates=[];for(let i=0;i<7;i++){const x=new Date(s);x.setUTCDate(x.getUTCDate()+i);dates.push(iso(x))}return {dates,weekday}}
+  // V2.6.8.13：休日手当の判定ルール（従来の「週6日以上出勤」「月またぎ週は無条件で休日」は廃止）。
+  // ・休日手当の対象になり得るのは土曜日の出勤のみ。日曜・祝日など土曜日以外の会社休日は常に残業扱い。
+  // ・土曜日は、同じ週の日曜～金曜の6日間が全て「出勤」または「有給」で埋まっており、
+  //   かつ土曜日自体も出勤している場合にのみ休日手当（それ以外は残業扱い）。
+  // ・日曜～金曜のいずれかに、雨休など「出勤」「有給」以外の記録（確定した記録）が1日でもあれば、
+  //   その時点で7日間が埋まらないことが確定するため、他の日が空欄でも残業扱いに確定する。
+  // ・日曜～金曜に記録が無い日（未入力）は、「実際に休んだ日」「未入力」「データ消失」のどれかを
+  //   アプリの仕組み上区別できない。近くに記録があるかどうかに関わらず、休日手当・残業どちらにも
+  //   自動確定せず「要確認」とする（月またぎの前月側・同月内のどちらでも同じ扱い）。
+  //   ただし上記の通り、雨休など確定した非該当日が別にあれば、空欄を調べるまでもなく残業確定とする。
+  // weekDayStatuses: 日～土7日分の状態配列。各要素は "work"（出勤）/"paid"（有給）/"other"（それ以外の記録あり）/"blank"（記録なし）。
+  function holidayTreatment(workDate,weekDayStatuses=[]){
+    const weekday=dateUTC(workDate).getUTCDay();
+    if(weekday!==6)return {treatment:"overtime",needsReview:false,reviewReason:""};
+    let hasBlank=false;
+    for(let i=0;i<6;i++){
+      const st=weekDayStatuses[i];
+      if(st==="work"||st==="paid")continue;
+      if(st==="blank"){hasBlank=true;continue}
+      return {treatment:"overtime",needsReview:false,reviewReason:""};
+    }
+    if(hasBlank)return {treatment:"needs_review",needsReview:true,reviewReason:"休日手当の判定に必要な記録が一部ありません（空欄の日があるため要確認）。"};
+    if(weekDayStatuses[6]==="work")return {treatment:"holiday",needsReview:true,reviewReason:"会社休日を暫定的に休日欄へ計算。管理者確認が必要"};
+    return {treatment:"overtime",needsReview:false,reviewReason:""};
+  }
   function calculate(start,end,workType="通常",isCalendarHoliday=false,shift="day",treatment="overtime"){
     if(["雨休","特休","有給","欠勤","振休"].includes(workType))return zero();
     let a=toMinutes(start),b=toMinutes(end);
@@ -33,10 +52,13 @@
     const nightAll=overlap(a,b,1320,1740)+overlap(a,b,2760,3180);
     const nightWorked=effectiveNight?Math.max(0,nightAll-75):0; // 暫定：22:00～5:00から休憩1時間15分を控除
     if(isCalendarHoliday){
-      const holiday=treatment==="holiday"?worked:0,ot=treatment==="holiday"?0:worked;
-      return {valid:true,errorCode:"",errorMessage:"",totalMinutes:total,workedMinutes:worked,normalMinutes:0,overtimeMinutes:ot,nightMinutes:nightWorked,holidayMinutes:holiday,overtime100Minutes:0,overtime025Minutes:0,night025Minutes:0,holidayPremiumMinutes:0,isHoliday:true,holidayRate:0,holidayTreatment:treatment,holidayNeedsReview:treatment==="holiday",holidayReviewReason:treatment==="holiday"?"会社休日を暫定的に休日欄へ計算。管理者確認が必要":"",normalDisplay:"0.0",overtimeDisplay:display(ot),nightDisplay:display(nightWorked),holidayDisplay:display(holiday)};
+      const isHolidayPay=treatment==="holiday";
+      const needsReview=treatment==="holiday"||treatment==="needs_review";
+      const reviewReason=treatment==="needs_review"?"休日手当の判定に必要な記録が一部ありません（空欄の日があるため要確認）。":(treatment==="holiday"?"会社休日を暫定的に休日欄へ計算。管理者確認が必要":"");
+      const holiday=isHolidayPay?worked:0,ot=isHolidayPay?0:worked;
+      return {valid:true,errorCode:"",errorMessage:"",totalMinutes:total,workedMinutes:worked,normalMinutes:0,overtimeMinutes:ot,nightMinutes:nightWorked,holidayMinutes:holiday,overtime100Minutes:0,overtime025Minutes:0,night025Minutes:0,holidayPremiumMinutes:0,isHoliday:true,holidayRate:0,holidayTreatment:treatment,holidayNeedsReview:needsReview,holidayReviewReason:reviewReason,normalDisplay:"0.0",overtimeDisplay:display(ot),nightDisplay:display(nightWorked),holidayDisplay:display(holiday)};
     }
     return {valid:true,errorCode:"",errorMessage:"",totalMinutes:total,workedMinutes:worked,normalMinutes:normal,overtimeMinutes:overtime,nightMinutes:nightWorked,holidayMinutes:0,overtime100Minutes:0,overtime025Minutes:0,night025Minutes:0,holidayPremiumMinutes:0,isHoliday:false,holidayRate:0,holidayTreatment:"weekday",holidayNeedsReview:false,holidayReviewReason:"",normalDisplay:display(normal),overtimeDisplay:display(overtime),nightDisplay:display(nightWorked),holidayDisplay:"0.0"};
   }
-  global.DemaeCalc={calculate,display,weekInfo,holidayTreatment};
+  global.DemaeCalc={calculate,display,weekInfo,weekDates,holidayTreatment};
 })(window);
